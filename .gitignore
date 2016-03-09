@@ -15,5 +15,8 @@
 
 # Ignore Byebug command history file.
 .byebug_history
+
+.vagrant/
+config/*.yml
 .env*
 .env.*
