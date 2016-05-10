@@ -4,7 +4,7 @@ default: &default
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: <%= ENV['LOGISTIC_ACCOUNTSERVICE_DATABASE_HOST'] %>
+  host: <%= ENV['LOGISTIC_SERVICE_DATABASE_HOST'] %>
   username: <%= ENV['LOGISTIC_SERVICE_DATABASE_USER'] %>
   password: <%= ENV['LOGISTIC_SERVICE_DATABASE_PASSWORD'] %>
 
