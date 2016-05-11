@@ -38,7 +38,7 @@ Vagrant.configure(2) do |config|
   config.vm.define :db do |db|
     db.vm.hostname = 'logistic-db.jonnyfresh.v2'
     # db.vm.network :forwarded_port, guest: 5432, host: 54321
-    db.vm.network :private_network, ip: "192.168.200.150"
+    db.vm.network :private_network, ip: "192.168.200.140"
 
     db.vm.provider :virtualbox do |vb|
         vb.memory = 1024
@@ -68,10 +68,10 @@ Vagrant.configure(2) do |config|
     # SHELL
   end
 
-  config.vm.define :web do |web|
+  config.vm.define :web, default: true do |web|
     web.vm.hostname = 'logistic-app.jonnyfresh.v2'
     #web.vm.network :forwarded_port, guest: 80, host: 8080
-    web.vm.network :private_network, ip: "192.168.200.50"
+    web.vm.network :private_network, ip: "192.168.200.40"
 
     # web.vm.synced_folder "www", "/var/www/jonnyfresh"
 
@@ -106,7 +106,12 @@ Vagrant.configure(2) do |config|
     # cd /vagrant && bundle exec puma -e vagrant -d -b unix:///var/run/logistic.sock --pidfile /var/run/logistic.pid
     web.vm.provision :shell, name:'Application', inline: <<-SHELL
     if [ ! -f ~/.provision/application ]; then
-        rm /etc/nginx/conf.d/sites-enabled/default
+        if [ -f /etc/nginx/conf.d/sites-enabled/default ]; then
+          rm /etc/nginx/conf.d/sites-enabled/default
+        fi
+        if [ -f /etc/nginx/conf.d/default.conf ]; then
+          mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.disabled
+        fi
         cp -f /vagrant/.provision/site.conf /etc/nginx/conf.d/logistic.conf
         cp -f /vagrant/.provision/puma*.conf /etc/init/
         chmod -x /etc/init/puma*.conf
@@ -119,7 +124,7 @@ Vagrant.configure(2) do |config|
         cd /vagrant && bundle install
         start puma-manager
         service nginx restart
-        echo '192.168.200.150  db' >> /etc/hosts
+        echo '192.168.200.140  db' >> /etc/hosts
         echo '127.0.0.1     logistic.jonnyfresh.dev' >> /etc/hosts
         touch ~/.provision/application
     fi
