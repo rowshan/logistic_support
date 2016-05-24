@@ -28,6 +28,14 @@ RSpec.configure do |config|
   config.include Rails::Controller::Testing::TestProcess
   config.include Rails::Controller::Testing::TemplateAssertions
   config.include Rails::Controller::Testing::Integration
+
+  config.include ApiM8::Rspec::RequestHelper, :type => :controller
+  config.include ApiM8::Rspec::ResponseHelper, :type => :controller
+  config.include ApiM8::Rspec::AuthenticationHelper, :type => :controller
+
+  config.include ApiM8::Rspec::RequestHelper, :type => :request
+  config.include ApiM8::Rspec::ResponseHelper, :type => :request
+  config.include ApiM8::Rspec::AuthenticationHelper, :type => :request
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
