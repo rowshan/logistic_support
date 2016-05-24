@@ -27,11 +27,11 @@ workers ENV.fetch("WEB_CONCURRENCY") { 1 }
 bind "unix:///var/run/logistic.sock"
 
 # Logging
-# stdout_redirect "/var/log/puma/logistic.stdout.log", "/var/log/puma/logistic.stderr.log", true
+stdout_redirect "/var/log/puma/logistic.stdout.log", "/var/log/puma/logistic.stderr.log", true
 
 # Set master PID and state locations
-# pidfile "/var/run/puma-logistic.pid"
-# state_path "/var/run/puma-logistic.state"
+pidfile "/var/run/puma-logistic.pid"
+state_path "/var/run/puma-logistic.state"
 activate_control_app
 
 # Use the `preload_app!` method when specifying a `workers` number.
