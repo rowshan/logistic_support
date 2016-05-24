@@ -1,0 +1,14 @@
+---
+default: &default
+  client_key: <%= ENV["LOGISTIC_SERVICE_APIM8_CLIENT_KEY"] %>
+  client_secret: <%= ENV["LOGISTIC_SERVICE_APIM8_CLIENT_SECRET"] %>
+  endpoint: <%= ENV["LOGISTIC_SERVICE_APIM8_ENDPOINT"] %>
+
+development:
+  <<: *default
+
+vagrant:
+  <<: *default
+
+test:
+  <<: *default

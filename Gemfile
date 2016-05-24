@@ -1,8 +1,7 @@
 source 'https://rubygems.org'
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '>= 5.0.0.beta3', '< 5.1'
+gem 'rails', '>= 5.0.0.rc1', '< 5.1'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
 # Use Puma as the app server
@@ -36,8 +35,13 @@ gem 'active_model_serializers', github: 'rails-api/active_model_serializers'
 gem 'dotenv-rails', groups: [:development, :test, :vagrant]
 
 group :development, :test do
-  gem 'rspec-rails', '~>3.0'
+  gem 'rspec-rails', '~>3.5.0.beta'
   gem 'rails-controller-testing'
 end
 
 gem 'simplecov', require: false, group: :test
+
+# This needs to be removed once 2.0 is released and can be added as a dependency
+# It is required by ApiM8
+gem 'rest-client', github: 'rest-client/rest-client', branch: :master
+gem 'api_m8', git: 'git@bitbucket.org:jonnyfresh/api_m8.git', branch: :master
