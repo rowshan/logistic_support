@@ -5,4 +5,8 @@ Rails.application.routes.draw do
   # mount ActionCable.server => '/cable'
   root to: 'monitor#index'
   get 'ping', to: 'monitor#ping'
+
+  scope '/logistic' do
+
+  end
 end
