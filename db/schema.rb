@@ -11,10 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160104103454) do
+ActiveRecord::Schema.define(version: 20160613082632) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
+
+  create_table "time_windows", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "label"
+    t.time     "start_time"
+    t.time     "end_time"
+    t.uuid     "tenant_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
 end

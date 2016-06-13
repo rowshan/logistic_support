@@ -37,7 +37,10 @@ gem 'dotenv-rails', groups: [:development, :test, :vagrant]
 group :development, :test do
   gem 'rspec-rails', '~>3.5.0.beta'
   gem 'rails-controller-testing'
+  gem 'factory_girl_rails'
+
 end
+
 
 gem 'simplecov', require: false, group: :test
 
