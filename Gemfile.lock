@@ -176,6 +176,9 @@ GEM
     thread_safe (0.3.5)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.2)
     websocket-driver (0.6.3)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
@@ -191,7 +194,7 @@ DEPENDENCIES
   listen (~> 3.0.5)
   pg (~> 0.18)
   puma
-  rails (>= 5.0.0.beta3, < 5.1)
+  rails (>= 5.0.0.rc1, < 5.1)
   rails-controller-testing
   rest-client!
   rspec-rails (~> 3.5.0.beta)
@@ -199,4 +202,4 @@ DEPENDENCIES
   tzinfo-data
 
 BUNDLED WITH
-   1.12.1
+   1.12.5
