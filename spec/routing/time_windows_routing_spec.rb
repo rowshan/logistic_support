@@ -7,16 +7,8 @@ RSpec.describe TimeWindowsController, type: :routing do
       expect(:get => "/time_windows").to route_to("time_windows#index")
     end
 
-    it "routes to #new" do
-      expect(:get => "/time_windows/new").to route_to("time_windows#new")
-    end
-
     it "routes to #show" do
       expect(:get => "/time_windows/1").to route_to("time_windows#show", :id => "1")
-    end
-
-    it "routes to #edit" do
-      expect(:get => "/time_windows/1/edit").to route_to("time_windows#edit", :id => "1")
     end
 
     it "routes to #create" do
