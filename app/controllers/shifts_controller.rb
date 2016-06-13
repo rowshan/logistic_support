@@ -18,7 +18,7 @@ class ShiftsController < ApplicationController
     @shift = Shift.new(shift_params)
 
     if @shift.save
-      render json: @shift, status: :created, location: @shift
+      render json: @shift, status: :created
     else
       render json: @shift.errors, status: :unprocessable_entity
     end
@@ -46,6 +46,6 @@ class ShiftsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def shift_params
-      params.fetch(:shift, {})
+      json_api_params(Shift, [:name, :start_time, :end_time, :send_time, :enabled]).fetch(:attributes, {})
     end
 end

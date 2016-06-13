@@ -4,6 +4,6 @@ FactoryGirl.define do
     label { "label#{SecureRandom.hex}" }
     start_time { "label#{SecureRandom.hex}" }
     end_time { "label#{SecureRandom.hex}" }
-
+    shift
   end
 end
