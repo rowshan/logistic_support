@@ -56,7 +56,7 @@ RSpec.describe ShiftsController, type: :controller do
 
   describe "PUT update" do
     let!(:shift) { create :shift }
-    let(:new_attributes) { attributes_for(:shift).update( name:shift.to_param,start_time:shift.to_param)}#, end_time:shift.to_param)}
+    let(:new_attributes) { attributes_for(:shift).update( name:shift.to_param,start_time:shift.to_param, end_time:shift.to_param)}
 
     describe "with valid params" do
       it "updates the requested TimeWindow" do
