@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
-  resources :shifts
-  resources :time_windows
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   # Serve websocket cable requests in-process
@@ -9,6 +8,10 @@ Rails.application.routes.draw do
   get 'ping', to: 'monitor#ping'
 
   scope '/logistic' do
+    resources :trip_kinds
+    resources :trips
+    resources :shifts
+    resources :time_windows
 
   end
 end
