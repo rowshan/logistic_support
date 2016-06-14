@@ -7,16 +7,8 @@ RSpec.describe ShiftsController, type: :routing do
       expect(:get => "/shifts").to route_to("shifts#index")
     end
 
-    it "routes to #new" do
-      expect(:get => "/shifts/new").to route_to("shifts#new")
-    end
-
     it "routes to #show" do
       expect(:get => "/shifts/1").to route_to("shifts#show", :id => "1")
-    end
-
-    it "routes to #edit" do
-      expect(:get => "/shifts/1/edit").to route_to("shifts#edit", :id => "1")
     end
 
     it "routes to #create" do
