@@ -30,20 +30,10 @@ class ShiftsController < ApplicationController
   # PATCH/PUT /shifts/1
   def update
     logger.debug 'SHIFT_PARAMS:' + shift_params.inspect
-    params_h = shift_params.to_h
-    if (params_h.include?(:name))
-      @shift=Shift.find(params_h.delete(:name))
+
+    if shift_params[:time_window_id]
+      @shift.time_window=TimeWindow.find(shift_params[:time_window_id])
     end
-
-    if (params_h.include?(:start_time))
-      @shift=Shift.find(params_h.delete(:start_time))
-    end
-
-    if (params_h.include?(:end_time))
-      @shift=Shift.find(params_h.delete(:end_time))
-    end
-
-
 
     if @shift.update(shift_params)
       render json: @shift
