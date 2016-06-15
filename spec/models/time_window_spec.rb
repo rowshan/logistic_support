@@ -11,7 +11,7 @@ RSpec.describe TimeWindow, type: :model do
     end
 
     it 'has the attributes' do
-      expect(attributes_for(:time_window)).to include(:tenant_id,:label,:start_time,:end_time)
+      expect(attributes_for(:time_window)).to include(:tenant_id,:label)
     end
   end
 

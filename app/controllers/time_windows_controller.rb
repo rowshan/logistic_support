@@ -22,15 +22,18 @@ class TimeWindowsController < ApplicationController
     else
       render json: @time_window.errors, status: :unprocessable_entity
     end
+  #  p time_window_params
   end
 
   # PATCH/PUT /time_windows/1
   def update
+
     if @time_window.update(time_window_params)
       render json: @time_window
     else
       render json: @time_window.errors, status: :unprocessable_entity
     end
+    #p time_window_params
   end
 
   # DELETE /time_windows/1
