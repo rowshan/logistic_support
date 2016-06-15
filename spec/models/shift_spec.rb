@@ -11,7 +11,7 @@ RSpec.describe Shift, type: :model do
     end
 
     it 'has the attributes' do
-      expect(attributes_for(:shift)).to include(:time_window_id, :name, :start_time, :end_time, :send_time)
+      expect(attributes_for(:shift)).to include(:name,:send_time,:enabled)
     end
   end
 
