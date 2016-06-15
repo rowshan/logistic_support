@@ -27,6 +27,8 @@ RSpec.describe "TimeWindows", type: :request do
       expect(json_api_response.size).to eq(time_windows.count)
       expect(time_windows.map(&:id)).to include(json_api_response.first['id'])
       expect(json_api_response.first['attributes']).to include('label', 'start-time', 'end-time', 'tenant-id', 'url')
+      expect(json_api_response.first['relationships']).to include('shifts')
+
     end
 
   end
