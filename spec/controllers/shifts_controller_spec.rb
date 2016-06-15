@@ -55,14 +55,14 @@ RSpec.describe ShiftsController, type: :controller do
 
   describe "PUT update" do
     let!(:time_window) { create :time_window }
-
     let!(:shift) { create :shift  }
     let(:new_attributes) { attributes_for(:shift)}
 
     describe "with valid params" do
-      it "updates the requested TimeWindow" do
-        put :update, params: {time_window_id: time_window.to_param,:id => shift.to_param}.update(json_api_params(Shift, new_attributes)), session: valid_session
+      it "updates the requested Shift" do
+        put :update, params: {:time_window_id=> time_window.to_param,:id => shift.to_param}.update(json_api_params(Shift, new_attributes)), session: valid_session
         shift.reload
+        #expect(shift.send_time).to eq Time.now
         p shift.inspect
         new_attributes.each do |attr, val|
           p attr, val
@@ -71,15 +71,15 @@ RSpec.describe ShiftsController, type: :controller do
       end
 
       it "assigns the requested shift as @shift" do
-        put :update, params: {:time_window_id=> shift.time_window.to_param,:id => shift.to_param}.update(json_api_params(Shift, new_attributes)), session: valid_session
+        put :update, params: {:time_window_id=> time_window.to_param,:id => shift.to_param}.update(json_api_params(Shift, new_attributes)), session: valid_session
         expect(assigns(:shift)).to eq(shift)
       end
     end
 
     describe "with invalid params" do
       it "assigns the shift as @shift" do
-        put :update, params: {:time_window_id=> shift.time_window.to_param,:id => shift.to_param}.update(
-            json_api_params(Shift, new_attributes.update( name:nil,time_window_id: nil,start_time:nil, end_time:nil,send_time:nil))), session: valid_session
+        put :update, params: {:time_window_id=> time_window.to_param,:id => shift.to_param}.update(
+            json_api_params(Shift, new_attributes.update( name:nil,time_window_id: nil,start_time:nil, end_time:nil,send_time:nil,enabled: nil))), session: valid_session
         expect(assigns(:shift)).to eq(shift)
         p assigns(:shift).errors
       end
