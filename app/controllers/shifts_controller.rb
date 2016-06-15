@@ -20,7 +20,7 @@ class ShiftsController < ApplicationController
       @shift.time_window=TimeWindow.find(shift_params[:time_window_id])
     end
 
-    if @shift.save
+    if @shift.save!
       render json: @shift, status: :created
     else
       render json: @shift.errors, status: :unprocessable_entity
