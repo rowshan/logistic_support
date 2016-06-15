@@ -16,8 +16,12 @@ class TripsController < ApplicationController
   # POST /trips
   def create
     @trip = Trip.new(trip_params)
+    p @trip.inspect
+    if trip_params[:trip_kind_id]
+      @trip.trip_kind=TripKind.find(trip_params[:trip_kind_id])
+    end
 
-    if @trip.save
+    if @trip.save!
       render json: @trip, status: :created
     else
       render json: @trip.errors, status: :unprocessable_entity
@@ -26,7 +30,14 @@ class TripsController < ApplicationController
 
   # PATCH/PUT /trips/1
   def update
-    if @trip.update(trip_params)
+     trip_params = trip_params.to_h
+     p trip_params
+     if trip_params.include?(:trip_kind_id)
+       @trip.trip_kind=TripKind.find(trip_params.delete[:trip_kind_id])
+     end
+
+     if @trip.update(trip_params)
+
       render json: @trip
     else
       render json: @trip.errors, status: :unprocessable_entity
