@@ -3,6 +3,5 @@ FactoryGirl.define do
     tenant_id { SecureRandom.uuid }
     label { "label#{SecureRandom.hex}" }
 
-
   end
 end

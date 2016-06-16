@@ -2,28 +2,29 @@ require "rails_helper"
 
 RSpec.describe TripsController, type: :routing do
   describe "routing" do
+    let(:scope) { '/logistic' }
 
     it "routes to #index" do
-      expect(:get => "/trips").to route_to("trips#index")
+      expect(:get => "#{scope}/trips").to route_to("trips#index")
     end
 
     it "routes to #show" do
-      expect(:get => "/trips/1").to route_to("trips#show", :id => "1")
+      expect(:get => "#{scope}/trips/1").to route_to("trips#show", :id => "1")
     end
     it "routes to #create" do
-      expect(:post => "/trips").to route_to("trips#create")
+      expect(:post => "#{scope}/trips").to route_to("trips#create")
     end
 
     it "routes to #update via PUT" do
-      expect(:put => "/trips/1").to route_to("trips#update", :id => "1")
+      expect(:put => "#{scope}/trips/1").to route_to("trips#update", :id => "1")
     end
 
     it "routes to #update via PATCH" do
-      expect(:patch => "/trips/1").to route_to("trips#update", :id => "1")
+      expect(:patch => "#{scope}/trips/1").to route_to("trips#update", :id => "1")
     end
 
     it "routes to #destroy" do
-      expect(:delete => "/trips/1").to route_to("trips#destroy", :id => "1")
+      expect(:delete => "#{scope}/trips/1").to route_to("trips#destroy", :id => "1")
     end
 
   end

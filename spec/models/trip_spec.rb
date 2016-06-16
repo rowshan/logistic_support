@@ -44,30 +44,38 @@ RSpec.describe Trip, type: :model do
         expect(subject.errors).to include(:address_id)
       end
     end
+
+    # context 'date' do
+    #   subject { build(:trip, date: nil) }
+    #   it " fails for missing" do
+    #     expect(subject).not_to be_valid
+    #     expect(subject.errors).to include(:date)
+    #   end
+    # end
+
+
+    # context 'uniqueness of ' do
+    #   {
+    #       trip_kind_id: SecureRandom.uuid
+    #   }.each do |field, value|
+    #     context "#{field}" do
+    #       it 'fails for identical' do
+    #         trip.attributes.dup
+    #         trip.valid?
+    #         expect(trip.errors[field].size).to eq(0)
+    #       end
+    #
+    #       it 'passes for different' do
+    #         trip.attributes.dup
+    #         trip.send(:"#{field}=", value)
+    #         trip.valid?
+    #         expect(trip.errors[field].size).to eq(0)
+    #       end
+    #     end
+    #   end
+    # end
+
   end
-
-  context 'uniqueness of ' do
-    {
-        trip_kind_id: SecureRandom.uuid
-    }.each do |field, value|
-      context "#{field}" do
-        it 'fails for identical' do
-          trip.attributes.dup
-          trip.valid?
-          expect(trip.errors[field].size).to eq(0)
-        end
-
-        it 'passes for different' do
-          trip.attributes.dup
-          trip.send(:"#{field}=", value)
-          trip.valid?
-          expect(trip.errors[field].size).to eq(0)
-        end
-      end
-    end
-  end
-
-
 end
 
 

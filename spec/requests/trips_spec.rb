@@ -9,6 +9,8 @@ RSpec.describe "Trips", type: :request do
       {}.merge(token_authentication).merge(json_api_headers)
     }
 
+
+
     describe "GET /trips" do
       let!(:trips) { create_list :trip, rand(5..10) }
 
@@ -66,12 +68,12 @@ RSpec.describe "Trips", type: :request do
     end
 
     describe 'POST /trips' do
+      let!(:trip) { create :trip }
+      let!(:trip_kind) { create :trip_kind }
+      let!(:time_window) { create :time_window }
       describe 'with valid params' do
-        # let!(:trip_kind) { create :trip_kind }
-        # let!(:time_window) { create :time_window }
-
         it 'responds with :created' do
-          _attrs = attributes_for(:trip).slice(:order_id,:address_id,:date)
+          _attrs = attributes_for(:trip).slice(:trip_kind_id,:time_window_id,:order_id,:date,:address_id).update(:trip_kind_id=> trip_kind.to_param, time_window_id: time_window.to_param)
           post trips_path, params: json_api_params(Trip, _attrs), headers: headers, as: :json
           expect(response).to have_http_status(:created)
         end
@@ -84,50 +86,50 @@ RSpec.describe "Trips", type: :request do
         end
       end
     end
-    #
-    # describe 'PUT /trips/:id' do
-    #   let!(:trip) { create :trip }
-    #   let(:new_attributes) { attributes_for(:trip).slice(:trip_kind_id, :order_id,:time_window_id,:address_id,:date) }
-    #
-    #   describe 'with valid params' do
-    #
-    #     it 'updates the requested trip' do
-    #       put trip_path(trip), params: json_api_params(Trip, new_attributes), headers: headers, as: :json
-    #       trip.reload
-    #       expect(trip.attributes.with_indifferent_access).to include(new_attributes)
-    #     end
-    #
-    #     it 'responds with :ok' do
-    #       put trip_path(trip), params: json_api_params(Trip, new_attributes), headers: headers, as: :json
-    #       expect(response).to have_http_status(:ok)
-    #     end
-    #   end
-    #
-    #   describe 'with invalid params' do
-    #     it 'it responds with :unprocessable_entity' do
-    #       put trip_path(trip), params: json_api_params(Trip, {trip_kind_id: nil, order_id: nil, date: nil, time_window_id: nil, address_id: nil}), headers: headers, as: :json
-    #       expect(response).to have_http_status(:unprocessable_entity)
-    #     end
-    #   end
-    #
-    #   describe 'with missing item' do
-    #     it 'responds with :not_found' do
-    #       put trip_path(-1000), params: json_api_params(Trip, new_attributes), headers: headers, as: :json
-    #       expect(response).to have_http_status(:not_found)
-    #     end
-    #   end
-    # end
 
-    # describe 'DELETE /trips/:id' do
-    #   let!(:trip) { create :trip }
-    #
-    #   it 'for existing item, responds with :no_content' do
-    #     delete trip_path(trip), headers: headers, as: :json
-    #     expect(response).to have_http_status(:no_content)
-    #   end
-    #   it 'for missing item, responds with :not_found' do
-    #     delete trip_path(-1000), headers: headers, as: :json
-    #     expect(response).to have_http_status(:not_found)
-    #   end
-    # end
+    describe 'PUT /trips/:id' do
+      let!(:trip) { create :trip }
+      let(:new_attributes) { attributes_for(:trip).slice(:trip_kind_id, :order_id,:time_window_id,:address_id,:date) }
+
+      describe 'with valid params' do
+
+        it 'updates the requested trip' do
+          put trip_path(trip), params: json_api_params(Trip, new_attributes), headers: headers, as: :json
+          trip.reload
+          expect(trip.attributes.with_indifferent_access).to include(new_attributes)
+        end
+
+        it 'responds with :ok' do
+          put trip_path(trip), params: json_api_params(Trip, new_attributes), headers: headers, as: :json
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      describe 'with invalid params' do
+        it 'it responds with :unprocessable_entity' do
+          put trip_path(trip), params: json_api_params(Trip, {trip_kind_id: nil, order_id: nil, date: nil, time_window_id: nil, address_id: nil}), headers: headers, as: :json
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+      end
+
+      describe 'with missing item' do
+        it 'responds with :not_found' do
+          put trip_path(-1000), params: json_api_params(Trip, new_attributes), headers: headers, as: :json
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+    end
+
+    describe 'DELETE /trips/:id' do
+      let!(:trip) { create :trip }
+
+      it 'for existing item, responds with :no_content' do
+        delete trip_path(trip), headers: headers, as: :json
+        expect(response).to have_http_status(:no_content)
+      end
+      it 'for missing item, responds with :not_found' do
+        delete trip_path(-1000), headers: headers, as: :json
+        expect(response).to have_http_status(:not_found)
+      end
+    end
 end
