@@ -27,7 +27,7 @@ RSpec.describe TripsController, type: :controller do
   describe "POST create" do
     let!(:time_window) { create :time_window }
     let!(:trip_kind) { create :trip_kind }
-    let!(:trip) { create :trip, time_window_id: time_window.to_param }
+    let!(:trip) { create :trip }
     describe "with valid params" do
       it "creates a new Trip" do
         expect {
