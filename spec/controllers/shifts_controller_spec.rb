@@ -60,7 +60,7 @@ RSpec.describe ShiftsController, type: :controller do
 
     describe "with valid params" do
       it "updates the requested Shift" do
-        put :update, params: {:time_window_id=> time_window.to_param,:id => shift.to_param}.update(json_api_params(Shift, new_attributes)), session: valid_session
+        put :update, params: {:time_window_id=> time_window.to_param,:id => shift.to_param}.update(json_api_params(Shift, new_attributes).update(:time_window_id=> time_window.to_param,)), session: valid_session
         shift.reload
         #expect(shift.send_time).to eq Time.now
         p shift.inspect
@@ -71,7 +71,7 @@ RSpec.describe ShiftsController, type: :controller do
       end
 
       it "assigns the requested shift as @shift" do
-        put :update, params: {:time_window_id=> time_window.to_param,:id => shift.to_param}.update(json_api_params(Shift, new_attributes)), session: valid_session
+        put :update, params: {:time_window_id=> time_window.to_param,:id => shift.to_param}.update(json_api_params(Shift, new_attributes).update(:time_window_id=> time_window.to_param,)), session: valid_session
         expect(assigns(:shift)).to eq(shift)
       end
     end
