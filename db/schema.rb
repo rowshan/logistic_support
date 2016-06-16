@@ -11,11 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160613092111) do
+ActiveRecord::Schema.define(version: 20160614092957) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
+
+  create_table "shifts", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "name"
+    t.string   "start_time"
+    t.string   "end_time"
+    t.string   "send_time"
+    t.boolean  "enabled",        default: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.uuid     "time_window_id"
+  end
 
   create_table "time_windows", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string   "label"
@@ -24,6 +35,23 @@ ActiveRecord::Schema.define(version: 20160613092111) do
     t.uuid     "tenant_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "trip_kinds", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "trips", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.uuid     "trip_kind_id"
+    t.uuid     "order_id"
+    t.date     "date"
+    t.uuid     "time_window_id"
+    t.uuid     "address_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
 end
