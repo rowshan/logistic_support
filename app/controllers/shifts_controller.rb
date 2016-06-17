@@ -31,9 +31,9 @@ class ShiftsController < ApplicationController
   def update
      logger.debug 'SHIFT_PARAMS:' + shift_params.inspect
 
-    # if shift_params[:time_window_id]
-    #   @shift.time_window=TimeWindow.find(shift_params[:time_window_id])
-    # end
+    if shift_params[:time_window_id]
+      @shift.time_window=TimeWindow.find(shift_params[:time_window_id])
+    end
 
     if @shift.update(shift_params)
       render json: @shift

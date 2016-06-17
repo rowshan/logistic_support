@@ -39,7 +39,6 @@ RSpec.describe ShiftsController, type: :controller do
       it "assigns a newly created shift as @shift" do
        post :create, params:{:time_window_id=> time_window.to_param}.update(json_api_params(Shift, attributes_for(:shift).update(time_window_id:time_window.to_param))), session: valid_session
         expect(assigns(:shift)).to be_a(Shift)
-        p assigns(:shift).errors
         expect(assigns(:shift)).to be_persisted
       end
     end
@@ -62,10 +61,11 @@ RSpec.describe ShiftsController, type: :controller do
       it "updates the requested Shift" do
         put :update, params: {:time_window_id=> time_window.to_param,:id => shift.to_param}.update(json_api_params(Shift, new_attributes).update(:time_window_id=> time_window.to_param,)), session: valid_session
         shift.reload
-        p shift.inspect
-        new_attributes.each do |attr, val|
-          p attr, val
+        new_attributes.slice(:id, :time_window_id, :name).each do |attr, val|
           expect(shift.send(attr)).to eq(val)
+        end
+        new_attributes.slice(:start_time, :end_time, :send_time).each do |attr, val|
+          expect(shift.send(attr).strftime("%H:%M")).to eq(val)
         end
       end
 
@@ -80,7 +80,6 @@ RSpec.describe ShiftsController, type: :controller do
         put :update, params: {:time_window_id=> time_window.to_param,:id => shift.to_param}.update(
             json_api_params(Shift, new_attributes.update( name:nil,time_window_id: nil,start_time:nil, end_time:nil,send_time:nil,enabled: nil))), session: valid_session
         expect(assigns(:shift)).to eq(shift)
-        p assigns(:shift).errors
       end
 
     end
