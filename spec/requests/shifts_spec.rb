@@ -20,15 +20,15 @@ RSpec.describe "Shifts", type: :request do
       it 'responds with a list' do
         get shifts_path, headers: headers, as: :json
         expect(json_api_response).to be_a(Array)
+
       end
 
       it 'responds with a correct list' do
         get shifts_path, headers: headers, as: :json
         expect(json_api_response.size).to eq(shifts.count)
         expect(shifts.map(&:id)).to include(json_api_response.first['id'])
-        expect(json_api_response.first['attributes']).to include('name', 'start-time', 'end-time', 'send-time','enabled', 'url')
+        expect(json_api_response.first['attributes']).to include('name','time-window-id', 'start-time', 'end-time', 'send-time','enabled' ,'url')
         expect(json_api_response.first['relationships']).to include('time-window')
-
       end
 
     end
@@ -67,17 +67,19 @@ RSpec.describe "Shifts", type: :request do
 
     describe 'POST /shifts' do
       describe 'with valid params' do
+        let!(:time_window) { create :time_window }
+
         it 'responds with :created' do
-          _attrs = attributes_for(:shift).slice( :name, :start_time, :end_time,:send_time)
-          p _attrs
-          post shifts_path, params: json_api_params(Shift, _attrs), headers: headers, as: :json
+          _attrs = attributes_for(:shift).slice( :time_window_id, :name, :start_time, :end_time, :send_time,:enabled).update(:time_window_id=>time_window.to_param)
+          post shifts_path, params: {:time_window_id=> time_window.to_param}.merge(json_api_params(Shift, _attrs).update(:time_window_id=> time_window.to_param)), headers: headers, as: :json
           expect(response).to have_http_status(:created)
+
         end
       end
 
       describe 'with invalid params' do
         it 'responds with :unprocessable_entity' do
-          post shifts_path, params: json_api_params(Shift, {name: nil,start_time:nil, end_time:nil,send_time:nil}), headers: headers, as: :json
+          post shifts_path, params: json_api_params(Shift, {time_window_id:nil,name: nil,start_time:nil, end_time:nil,send_time:nil,enabled:nil}), headers: headers, as: :json
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end
@@ -85,14 +87,20 @@ RSpec.describe "Shifts", type: :request do
 
     describe 'PUT /shifts/:id' do
       let!(:shift) { create :shift }
-      let(:new_attributes) { attributes_for(:shift).slice(:name, :start_time, :end_time,:send_time) }
+      let(:new_attributes) { attributes_for(:shift) }
 
       describe 'with valid params' do
 
         it 'updates the requested time_window' do
           put shift_path(shift), params: json_api_params(Shift, new_attributes), headers: headers, as: :json
           shift.reload
+          new_attributes.slice(:id, :time_window_id, :name) do
           expect(shift.attributes.with_indifferent_access).to include(new_attributes)
+          end
+          new_attributes.slice(:start_time, :end_time, :send_time) do
+            expect(shift.attributes.with_indifferent_access).to include(new_attributes)
+
+          end
         end
 
         it 'responds with :ok' do
@@ -103,7 +111,7 @@ RSpec.describe "Shifts", type: :request do
 
       describe 'with invalid params' do
         it 'it responds with :unprocessable_entity' do
-          put shift_path(shift), params: json_api_params(Shift, {name: nil,start_time:nil, end_time:nil,send_time:nil}), headers: headers, as: :json
+          put shift_path(shift), params: json_api_params(Shift, {time_window_id:nil,name: nil,start_time:nil, end_time:nil,send_time:nil,enabled:nil}), headers: headers, as: :json
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end
@@ -115,17 +123,17 @@ RSpec.describe "Shifts", type: :request do
         end
       end
     end
-
-    describe 'DELETE /shifts/:id' do
-      let!(:shift) { create :shift }
-
-      it 'for existing item, responds with :no_content' do
-        delete shift_path(shift), headers: headers, as: :json
-        expect(response).to have_http_status(:no_content)
-      end
-      it 'for missing item, responds with :not_found' do
-        delete shift_path(-1000), headers: headers, as: :json
-        expect(response).to have_http_status(:not_found)
-      end
-    end
+    #
+    # describe 'DELETE /shifts/:id' do
+    #   let!(:shift) { create :shift }
+    #
+    #   it 'for existing item, responds with :no_content' do
+    #     delete shift_path(shift), headers: headers, as: :json
+    #     expect(response).to have_http_status(:no_content)
+    #   end
+    #   it 'for missing item, responds with :not_found' do
+    #     delete shift_path(-1000), headers: headers, as: :json
+    #     expect(response).to have_http_status(:not_found)
+    #   end
+    # end
 end
