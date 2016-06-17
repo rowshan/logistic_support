@@ -8,10 +8,13 @@ Rails.application.routes.draw do
   get 'ping', to: 'monitor#ping'
 
   scope '/logistic' do
-    resources :trip_kinds
-    resources :trips
-    resources :shifts
-    resources :time_windows
+    resources :trip_kinds, only:[:create, :update, :destroy, :index, :show ]
+    resources :trips, only:[:create, :update, :destroy, :index, :show ] do
+      resources :addresses, only:[:create, :update, :destroy, :index, :show ]
+
+    end
+    resources :shifts, only:[:create, :update, :destroy, :index, :show ]
+    resources :time_windows, only:[:create, :update, :destroy, :index, :show ]
 
   end
 end
