@@ -3,6 +3,5 @@ FactoryGirl.define do
     name { "Name#{SecureRandom.hex}" }
     description { "Des#{SecureRandom.hex}" }
 
-
   end
 end
