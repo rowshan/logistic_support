@@ -26,7 +26,7 @@ RSpec.describe "Shifts", type: :request do
         get shifts_path, headers: headers, as: :json
         expect(json_api_response.size).to eq(shifts.count)
         expect(shifts.map(&:id)).to include(json_api_response.first['id'])
-        expect(json_api_response.first['attributes']).to include('name', 'start-time', 'end-time', 'send-time', 'url')
+        expect(json_api_response.first['attributes']).to include('name', 'start-time', 'end-time', 'send-time','enabled', 'url')
         expect(json_api_response.first['relationships']).to include('time-window')
 
       end
@@ -48,7 +48,7 @@ RSpec.describe "Shifts", type: :request do
 
         it 'responds with the correct information' do
           get shift_path(shift), headers: headers, as: :json
-          expect(json_api_response.first['attributes']).to include('name', 'start-time', 'end-time', 'send-time','enabled', 'url')
+          expect(json_api_response['attributes']).to include('name','time-window-id', 'start-time', 'end-time', 'send-time','enabled', 'url')
         end
 
         it 'responds with :ok' do
@@ -69,6 +69,7 @@ RSpec.describe "Shifts", type: :request do
       describe 'with valid params' do
         it 'responds with :created' do
           _attrs = attributes_for(:shift).slice( :name, :start_time, :end_time,:send_time)
+          p _attrs
           post shifts_path, params: json_api_params(Shift, _attrs), headers: headers, as: :json
           expect(response).to have_http_status(:created)
         end
