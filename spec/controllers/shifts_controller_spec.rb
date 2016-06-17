@@ -26,13 +26,11 @@ RSpec.describe ShiftsController, type: :controller do
   end
 
   describe "POST create" do
-   #let!(:shift) { create :shift}
    let!(:time_window) { create :time_window }
 
     describe "with valid params" do
       it "creates a new Shift" do
         expect {
-         # post :create, params:json_api_params(Shift, attributes_for(:shift)), session: valid_session
          post :create, params:{:time_window_id=> time_window.to_param}.update(json_api_params(Shift, attributes_for(:shift).update(time_window_id:time_window.to_param))), session: valid_session
         }.to change(Shift, :count).by(1)
       end
@@ -40,7 +38,6 @@ RSpec.describe ShiftsController, type: :controller do
       it "assigns a newly created shift as @shift" do
        post :create, params:{:time_window_id=> time_window.to_param}.update(json_api_params(Shift, attributes_for(:shift).update(time_window_id:time_window.to_param))), session: valid_session
         expect(assigns(:shift)).to be_a(Shift)
-        p assigns(:shift).errors
         expect(assigns(:shift)).to be_persisted
       end
     end
@@ -55,32 +52,33 @@ RSpec.describe ShiftsController, type: :controller do
 
 
   describe "PUT update" do
-    let!(:shift) { create :shift }
-    let(:new_attributes) { attributes_for(:shift).update( name:shift.to_param,start_time:shift.to_param, end_time:shift.to_param)}
+    let!(:time_window) { create :time_window }
+    let!(:shift) { create :shift  }
+    let(:new_attributes) { attributes_for(:shift)}
 
     describe "with valid params" do
-      it "updates the requested TimeWindow" do
-        put :update, params: {time_window_id:shift.time_window.to_param,:id => shift.to_param}.update(json_api_params(Shift, new_attributes)), session: valid_session
+      it "updates the requested Shift" do
+        put :update, params: {:time_window_id=> time_window.to_param,:id => shift.to_param}.update(json_api_params(Shift, new_attributes).update(:time_window_id=> time_window.to_param,)), session: valid_session
         shift.reload
-        p shift.inspect
-        new_attributes.each do |attr, val|
-          p attr, val
+        new_attributes.slice(:id, :time_window_id, :name).each do |attr, val|
           expect(shift.send(attr)).to eq(val)
+        end
+        new_attributes.slice(:start_time, :end_time, :send_time).each do |attr, val|
+          expect(shift.send(attr).strftime("%H:%M")).to eq(val)
         end
       end
 
       it "assigns the requested shift as @shift" do
-        put :update, params: {:time_window_id=> shift.time_window.to_param,:id => shift.to_param}.update(json_api_params(Shift, new_attributes)), session: valid_session
+        put :update, params: {:time_window_id=> time_window.to_param,:id => shift.to_param}.update(json_api_params(Shift, new_attributes).update(:time_window_id=> time_window.to_param,)), session: valid_session
         expect(assigns(:shift)).to eq(shift)
       end
     end
 
     describe "with invalid params" do
       it "assigns the shift as @shift" do
-        put :update, params: {:time_window_id=> shift.time_window.to_param,:id => shift.to_param}.update(
-            json_api_params(Shift, new_attributes.update( name:nil,time_window_id: nil,start_time:nil, end_time:nil,send_time:nil))), session: valid_session
+        put :update, params: {:time_window_id=> time_window.to_param,:id => shift.to_param}.update(
+            json_api_params(Shift, new_attributes.update( name:nil,time_window_id: nil,start_time:nil, end_time:nil,send_time:nil,enabled: nil))), session: valid_session
         expect(assigns(:shift)).to eq(shift)
-        p assigns(:shift).errors
       end
 
     end

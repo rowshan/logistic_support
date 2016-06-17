@@ -19,9 +19,9 @@ ActiveRecord::Schema.define(version: 20160614092957) do
 
   create_table "shifts", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string   "name"
-    t.string   "start_time"
-    t.string   "end_time"
-    t.string   "send_time"
+    t.time     "start_time"
+    t.time     "end_time"
+    t.time     "send_time"
     t.boolean  "enabled",        default: false
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
@@ -30,11 +30,11 @@ ActiveRecord::Schema.define(version: 20160614092957) do
 
   create_table "time_windows", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string   "label"
-    t.string   "start_time"
-    t.string   "end_time"
     t.uuid     "tenant_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.time     "start_time"
+    t.time     "end_time"
   end
 
   create_table "trip_kinds", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|

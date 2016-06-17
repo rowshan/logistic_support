@@ -11,7 +11,7 @@ RSpec.describe Shift, type: :model do
     end
 
     it 'has the attributes' do
-      expect(attributes_for(:shift)).to include(:time_window_id, :name, :start_time, :end_time, :send_time)
+      expect(attributes_for(:shift)).to include(:name,:send_time,:enabled,:start_time,:end_time)
     end
   end
 
@@ -47,13 +47,13 @@ RSpec.describe Shift, type: :model do
       end
     end
 
-    context 'send_time' do
-      subject { build(:shift, send_time: nil) }
-      it " fails for missing" do
-        expect(subject).not_to be_valid
-        expect(subject.errors).to include(:send_time)
-      end
-    end
+    # context 'send_time' do
+    #   subject { build(:shift, send_time: nil) }
+    #   it " fails for missing" do
+    #     expect(subject).not_to be_valid
+    #     expect(subject.errors).to include(:send_time)
+    #   end
+    # end
 
   end
 end

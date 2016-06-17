@@ -189,9 +189,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
-
     websocket-driver (0.6.4)
-    websocket-extensions (0.1.2)
 
 PLATFORMS
   ruby
