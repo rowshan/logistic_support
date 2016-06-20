@@ -66,12 +66,17 @@ RSpec.describe "Shifts", type: :request do
     end
 
     describe 'POST /shifts' do
+      let!(:time_window) { create :time_window }
+      let!(:plant) { create :plant }
       describe 'with valid params' do
-        let!(:time_window) { create :time_window }
 
         it 'responds with :created' do
-          _attrs = attributes_for(:shift).slice( :time_window_id, :name, :start_time, :end_time, :send_time,:enabled).update(:time_window_id=>time_window.to_param)
-          post shifts_path, params: {:time_window_id=> time_window.to_param}.merge(json_api_params(Shift, _attrs).update(:time_window_id=> time_window.to_param)), headers: headers, as: :json
+          _attrs = attributes_for(:shift).slice( :time_window_id, :name, :start_time, :end_time, :send_time,:enabled,
+                                                 :plant_id).update(:time_window_id=>time_window.to_param,
+                                                                   :plant_id=> plant.to_param)
+          post shifts_path, params: {:plant_id=> plant.to_param,:time_window_id=> time_window.to_param}.merge(
+              json_api_params(Shift, _attrs).update(:time_window_id=> time_window.to_param,:plant_id=> plant.to_param)
+          ), headers: headers, as: :json
           expect(response).to have_http_status(:created)
 
         end
@@ -79,7 +84,10 @@ RSpec.describe "Shifts", type: :request do
 
       describe 'with invalid params' do
         it 'responds with :unprocessable_entity' do
-          post shifts_path, params: json_api_params(Shift, {time_window_id:nil,name: nil,start_time:nil, end_time:nil,send_time:nil,enabled:nil}), headers: headers, as: :json
+          post shifts_path, params: {:plant_id=> plant.to_param,:time_window_id=> time_window.to_param}.merge(
+              json_api_params(Shift, {time_window_id:nil,name: nil,start_time:nil, end_time:nil,
+                                                            send_time:nil,enabled:nil})
+          ), headers: headers, as: :json
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end

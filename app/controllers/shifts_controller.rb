@@ -18,9 +18,13 @@ class ShiftsController < ApplicationController
     @shift = Shift.new(shift_params)
     if shift_params[:time_window_id]
       @shift.time_window=TimeWindow.find(shift_params[:time_window_id])
+      end
+
+    if shift_params[:plant_id]
+      @shift.plant=Plant.find(shift_params[:plant_id])
     end
 
-    if @shift.save!
+    if @shift.save
       render json: @shift, status: :created
     else
       render json: @shift.errors, status: :unprocessable_entity
