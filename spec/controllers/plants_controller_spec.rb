@@ -32,12 +32,14 @@ RSpec.describe PlantsController, type: :controller do
     describe "with valid params" do
       it "creates a new Plant" do
         expect {
-          post :create, params:{:id=> plant.to_param}.update(json_api_params(Plant, attributes_for(:plant))), session: valid_session
+          post :create, params:{:id=> plant.to_param}.update(json_api_params(Plant, attributes_for(:plant))
+          ), session: valid_session
         }.to change(Plant, :count).by(1)
       end
 
       it "assigns a newly created plant as @plant" do
-        post :create, params:{:id=> plant.to_param}.update(json_api_params(Plant, attributes_for(:plant))), session: valid_session
+        post :create, params:{:id=> plant.to_param}.update(json_api_params(Plant, attributes_for(:plant))
+        ), session: valid_session
         expect(assigns(:plant)).to be_a(Plant)
         expect(assigns(:plant)).to be_persisted
       end
@@ -59,7 +61,8 @@ RSpec.describe PlantsController, type: :controller do
 
     describe "with valid params" do
       it "updates the requested Plant" do
-        put :update, params:{:id => plant.to_param}.update(json_api_params(Plant, new_attributes)), session: valid_session
+        put :update, params:{:id => plant.to_param}.update(json_api_params(Plant, new_attributes)
+        ), session: valid_session
         plant.reload
         new_attributes.each do |attr, val|
            expect(plant.send(attr)).to eq(val)
@@ -67,7 +70,8 @@ RSpec.describe PlantsController, type: :controller do
       end
 
       it "assigns the requested plant as @plant" do
-        put :update, params: {:id => plant.to_param}.update(json_api_params(Plant, new_attributes)), session: valid_session
+        put :update, params: {:id => plant.to_param}.update(json_api_params(Plant, new_attributes)
+        ), session: valid_session
         expect(assigns(:plant)).to eq(plant)
       end
     end
@@ -75,7 +79,8 @@ RSpec.describe PlantsController, type: :controller do
     describe "with invalid params" do
       it "assigns the plant as @plant" do
         put :update, params: {:id => plant.to_param}.update(
-            json_api_params(Plant, new_attributes.update( company:nil,email:nil,phone_no:nil,address:nil,tenant_id:nil))), session: valid_session
+            json_api_params(Plant, new_attributes.update( company:nil,email:nil,phone_no:nil,
+                                                          address:nil,tenant_id:nil))), session: valid_session
         expect(assigns(:plant)).to eq(plant)
       end
 

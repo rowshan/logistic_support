@@ -28,7 +28,7 @@ RSpec.describe "Plants", type: :request do
       get plants_path, headers: headers, as: :json
       expect(json_api_response.size).to eq(plants.count)
       expect(plants.map(&:id)).to include(json_api_response.first['id'])
-      expect(json_api_response.first['attributes']).to include('company','email','phone-no','address','tenant-id', 'url')
+      expect(json_api_response.first['attributes']).to include('company','email','phone-no','address','tenant-id','url')
       expect(json_api_response.first['relationships']).to include('shifts')
 
     end
@@ -105,7 +105,8 @@ RSpec.describe "Plants", type: :request do
 
     describe 'with invalid params' do
       it 'it responds with :unprocessable_entity' do
-        put plant_path(plant), params: json_api_params(Plant, {company:nil,email:nil,phone_no:nil,address:nil,tenant_id:nil}), headers: headers, as: :json
+        put plant_path(plant), params: json_api_params(Plant, {company:nil,email:nil,phone_no:nil,
+                                                               address:nil,tenant_id:nil}), headers: headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
