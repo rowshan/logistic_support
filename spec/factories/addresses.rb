@@ -18,5 +18,6 @@ FactoryGirl.define do
     country_code { "#{('A'..'Z').to_a.sample}#{('A'..'Z').to_a.sample}"}
     country_id { SecureRandom.uuid }
 
+    trip
   end
 end

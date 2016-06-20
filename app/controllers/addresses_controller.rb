@@ -16,6 +16,8 @@ class AddressesController < ApplicationController
   # POST /addresses
   def create
     @address = Address.new(address_params)
+    @address.trip = Trip.find(params[:trip_id])
+
 
     if @address.save
       render json: @address, status: :created
@@ -49,7 +51,7 @@ class AddressesController < ApplicationController
       json_api_params(Address, [:salutation, :first_name, :last_name, :company,
                                 :street, :house_no_main, :house_no_add, :other,
                                 :postal_code, :postal_code_id, :city, :city_id, :province, :province_id,
-                                :country, :country_code, :country_id,:trip_id]).fetch(:attributes, {})
+                                :country, :country_code, :country_id]).fetch(:attributes, {})
 
     end
 end
