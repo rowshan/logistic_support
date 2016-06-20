@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160620081520) do
+ActiveRecord::Schema.define(version: 20160620105632) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,16 @@ ActiveRecord::Schema.define(version: 20160620081520) do
     t.index ["trip_id"], name: "index_addresses_on_trip_id", using: :btree
   end
 
+  create_table "plants", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "company"
+    t.text     "email"
+    t.text     "phone_no"
+    t.text     "address"
+    t.uuid     "tenant_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "shifts", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string   "name"
     t.boolean  "enabled",        default: false
@@ -50,6 +60,7 @@ ActiveRecord::Schema.define(version: 20160620081520) do
     t.time     "start_time"
     t.time     "end_time"
     t.time     "send_time"
+    t.uuid     "plant_id"
   end
 
   create_table "time_windows", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|

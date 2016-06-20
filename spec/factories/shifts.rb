@@ -7,6 +7,7 @@ FactoryGirl.define do
     enabled { [true, false].sample }
 
     time_window
+    plant
 
     end
 end

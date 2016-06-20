@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Shift, type: :model do
+
   describe 'factory' do
     it 'exists' do
       expect { FactoryGirl.build :shift }.not_to raise_error
@@ -11,7 +12,7 @@ RSpec.describe Shift, type: :model do
     end
 
     it 'has the attributes' do
-      expect(attributes_for(:shift)).to include(:name,:send_time,:enabled,:start_time,:end_time)
+      expect(attributes_for(:shift)).to include(:name, :send_time, :enabled, :start_time, :end_time)
     end
   end
 
@@ -46,14 +47,12 @@ RSpec.describe Shift, type: :model do
         expect(subject.errors).to include(:end_time)
       end
     end
-
-    # context 'send_time' do
-    #   subject { build(:shift, send_time: nil) }
-    #   it " fails for missing" do
-    #     expect(subject).not_to be_valid
-    #     expect(subject.errors).to include(:send_time)
-    #   end
-    # end
-
+    context 'Plant' do
+      subject { build(:shift, plant: nil) }
+      it " fails for missing" do
+        expect(subject).not_to be_valid
+        expect(subject.errors).to include(:plant)
+      end
+    end
   end
 end

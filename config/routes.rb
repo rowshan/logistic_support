@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
     resources :shifts, only:[:create, :update, :destroy, :index, :show ]
     resources :time_windows, only:[:create, :update, :destroy, :index, :show ]
+    resources :plants, only:[:create, :update, :destroy, :index, :show ]
 
   end
 end
