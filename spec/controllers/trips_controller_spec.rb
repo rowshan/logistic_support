@@ -44,7 +44,6 @@ RSpec.describe TripsController, type: :controller do
             json_api_params(Trip, attributes_for(:trip).update(:trip_kind_id => trip_kind.to_param,
                                                                :time_window_id => time_window.to_param)))
         expect(assigns(:trip)).to be_a(Trip)
-        p assigns(:trip).errors
         expect(assigns(:trip)).to be_persisted
       end
     end
@@ -56,7 +55,6 @@ RSpec.describe TripsController, type: :controller do
             trip.to_param}.merge(json_api_params(Trip, attributes_for(:trip).update(
             trip_kind_id: nil, order_id: nil, date: nil, time_window_id: nil))), session: valid_session
         expect(assigns(:trip)).to be_a_new(Trip)
-        #p assigns(:trip).errors
       end
     end
   end
@@ -71,10 +69,11 @@ RSpec.describe TripsController, type: :controller do
       it "updates the requested Trip" do
         put :update, params: {:trip_kind_id => trip_kind.to_param, :time_window_id => time_window.to_param, :id =>
             trip.to_param}.update(json_api_params(Trip, new_attributes).update(:trip_kind_id => trip_kind.to_param,
-                                                                               :time_window_id => time_window.to_param)), session: valid_session
+                                                                               :time_window_id => time_window.to_param)
+        ), session: valid_session
         trip.reload
         new_attributes.each do |attr, val|
-          p expect(trip.send(attr)).to eq(val)
+           expect(trip.send(attr)).to eq(val)
         end
       end
     end
