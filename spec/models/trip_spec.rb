@@ -13,7 +13,7 @@ RSpec.describe Trip, type: :model do
     end
 
     it 'has the attributes' do
-      expect(attributes_for(:trip)).to include(:order_id, :date, :address_id)
+      expect(attributes_for(:trip)).to include(:order_id, :date)
     end
   end
 
@@ -37,13 +37,13 @@ RSpec.describe Trip, type: :model do
       end
     end
 
-    context 'address_id' do
-      subject { build(:trip, address_id: nil) }
-      it " fails for missing" do
-        expect(subject).not_to be_valid
-        expect(subject.errors).to include(:address_id)
-      end
-    end
+    # context 'address_id' do
+    #   subject { build(:trip, address_id: nil) }
+    #   it " fails for missing" do
+    #     expect(subject).not_to be_valid
+    #     expect(subject.errors).to include(:address_id)
+    #   end
+    # end
 
     # context 'date' do
     #   subject { build(:trip, date: nil) }

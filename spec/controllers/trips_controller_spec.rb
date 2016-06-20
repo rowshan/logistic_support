@@ -54,7 +54,7 @@ RSpec.describe TripsController, type: :controller do
       it "assigns a newly created but unsaved trip as @trip" do
         post :create, params: {:trip_kind_id => trip_kind.to_param, :time_window_id => time_window.to_param, :id =>
             trip.to_param}.merge(json_api_params(Trip, attributes_for(:trip).update(
-            trip_kind_id: nil, order_id: nil, date: nil, time_window_id: nil, address_id: nil))), session: valid_session
+            trip_kind_id: nil, order_id: nil, date: nil, time_window_id: nil))), session: valid_session
         expect(assigns(:trip)).to be_a_new(Trip)
         #p assigns(:trip).errors
       end
@@ -91,7 +91,7 @@ RSpec.describe TripsController, type: :controller do
       it "assigns the time_window as @trip" do
         put :update, params: {:trip_kind_id => trip_kind.to_param, :time_window_id => time_window.to_param, :id => trip.to_param
         }.update(
-            json_api_params(Trip, new_attributes.update(trip_kind_id: nil, order_id: nil, date: nil, time_window_id: nil, address_id: nil))), session: valid_session
+            json_api_params(Trip, new_attributes.update(trip_kind_id: nil, order_id: nil, date: nil, time_window_id: nil))), session: valid_session
         expect(assigns(:trip)).to eq(trip)
       end
 

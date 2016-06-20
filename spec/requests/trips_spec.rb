@@ -28,8 +28,8 @@ RSpec.describe "Trips", type: :request do
         get trips_path, headers: headers, as: :json
         expect(json_api_response.size).to eq(trips.count)
         expect(trips.map(&:id)).to include(json_api_response.first['id'])
-        expect(json_api_response.first['attributes']).to include('trip-kind-id', 'order-id', 'date', 'time-window-id','address-id', 'url')
-        expect(json_api_response.first['relationships']).to include('trip-kind','time-window')
+        expect(json_api_response.first['attributes']).to include('trip-kind-id', 'order-id', 'date', 'time-window-id','url')
+        expect(json_api_response.first['relationships']).to include('trip-kind','time-window','address')
 
       end
 
@@ -50,7 +50,7 @@ RSpec.describe "Trips", type: :request do
 
         it 'responds with the correct information' do
           get trip_path(trip), headers: headers, as: :json
-          expect(json_api_response['attributes']).to include('trip-kind-id', 'order-id', 'date', 'time-window-id','address-id', 'url')
+          expect(json_api_response['attributes']).to include('trip-kind-id', 'order-id', 'date', 'time-window-id', 'url')
         end
 
         it 'responds with :ok' do
@@ -73,7 +73,7 @@ RSpec.describe "Trips", type: :request do
       let!(:time_window) { create :time_window }
       describe 'with valid params' do
         it 'responds with :created' do
-          _attrs = attributes_for(:trip).slice(:trip_kind_id,:time_window_id,:order_id,:date,:address_id).update(:trip_kind_id=> trip_kind.to_param, time_window_id: time_window.to_param)
+          _attrs = attributes_for(:trip).slice(:trip_kind_id,:time_window_id,:order_id,:date).update(:trip_kind_id=> trip_kind.to_param, time_window_id: time_window.to_param)
           post trips_path, params: json_api_params(Trip, _attrs), headers: headers, as: :json
           expect(response).to have_http_status(:created)
         end
@@ -81,7 +81,7 @@ RSpec.describe "Trips", type: :request do
 
       describe 'with invalid params' do
         it 'responds with :unprocessable_entity' do
-          post trips_path, params: json_api_params(Trip, {trip_kind_id: nil, order_id: nil, date: nil, time_window_id: nil, address_id: nil}), headers: headers, as: :json
+          post trips_path, params: json_api_params(Trip, {trip_kind_id: nil, order_id: nil, date: nil, time_window_id: nil}), headers: headers, as: :json
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end
@@ -89,7 +89,7 @@ RSpec.describe "Trips", type: :request do
 
     describe 'PUT /trips/:id' do
       let!(:trip) { create :trip }
-      let(:new_attributes) { attributes_for(:trip).slice(:trip_kind_id, :order_id,:time_window_id,:address_id,:date) }
+      let(:new_attributes) { attributes_for(:trip).slice(:trip_kind_id, :order_id,:time_window_id,:date) }
 
       describe 'with valid params' do
 
@@ -107,7 +107,7 @@ RSpec.describe "Trips", type: :request do
 
       describe 'with invalid params' do
         it 'it responds with :unprocessable_entity' do
-          put trip_path(trip), params: json_api_params(Trip, {trip_kind_id: nil, order_id: nil, date: nil, time_window_id: nil, address_id: nil}), headers: headers, as: :json
+          put trip_path(trip), params: json_api_params(Trip, {trip_kind_id: nil, order_id: nil, date: nil, time_window_id: nil}), headers: headers, as: :json
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end
