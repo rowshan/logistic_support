@@ -29,7 +29,7 @@ RSpec.describe "Plants", type: :request do
       expect(json_api_response.size).to eq(plants.count)
       expect(plants.map(&:id)).to include(json_api_response.first['id'])
       expect(json_api_response.first['attributes']).to include('company','email','phone-no','address','tenant-id','url')
-      expect(json_api_response.first['relationships']).to include('shifts')
+      expect(json_api_response.first['relationships']).to include('shifts','drivers')
 
     end
   end

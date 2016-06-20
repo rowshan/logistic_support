@@ -17,8 +17,12 @@ class DriversController < ApplicationController
   def create
     @driver = Driver.new(driver_params)
 
+    if driver_params[:plant_id]
+      @driver.plant=Plant.find(driver_params[:plant_id])
+    end
+
     if @driver.save
-      render json: @driver, status: :created, location: @driver
+      render json: @driver, status: :created
     else
       render json: @driver.errors, status: :unprocessable_entity
     end
