@@ -18,7 +18,7 @@ class AddressesController < ApplicationController
     @address = Address.new(address_params)
 
     if @address.save
-      render json: @address, status: :created, location: @address
+      render json: @address, status: :created
     else
       render json: @address.errors, status: :unprocessable_entity
     end
@@ -46,8 +46,10 @@ class AddressesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def address_params
-      json_api_params(Shift, [:salutation, :first_name, :last_name, :street, :house_no_main, :house_no_add, :other,
-                              :postal_code, :city, :province, :country_code, :country]).fetch(:attributes, {})
+      json_api_params(Address, [:salutation, :first_name, :last_name, :company,
+                                :street, :house_no_main, :house_no_add, :other,
+                                :postal_code, :postal_code_id, :city, :city_id, :province, :province_id,
+                                :country, :country_code, :country_id,:trip_id]).fetch(:attributes, {})
 
     end
 end

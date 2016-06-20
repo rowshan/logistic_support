@@ -1,7 +1,7 @@
 class Trip < ApplicationRecord
   belongs_to :trip_kind
   belongs_to :time_window
-  has_one :address
+  #has_one :address
 
 
   validates_presence_of :trip_kind_id,:time_window_id,:address_id

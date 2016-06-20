@@ -5,6 +5,7 @@ class TripSerializer < ApplicationSerializer
   belongs_to :time_window
 
 
+
   def url
     url_helpers.trip_path(object)
   end
