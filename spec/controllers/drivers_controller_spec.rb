@@ -12,7 +12,7 @@ RSpec.describe DriversController, type: :controller do
   describe "GET index" do
     let!(:drivers) { create_list :driver, rand(2..10) }
     it "assigns all plants as @plants" do
-      get :index, parrams: {}, session: valid_session
+      get :index, params: {}, session: valid_session
       expect(assigns(:drivers)).to eq(drivers)
     end
   end

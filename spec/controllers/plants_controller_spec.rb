@@ -13,7 +13,7 @@ RSpec.describe PlantsController, type: :controller do
   describe "GET index" do
     let!(:plants) { create_list :plant, rand(2..10) }
     it "assigns all plants as @plants" do
-      get :index, parrams: {}, session: valid_session
+      get :index, params: {}, session: valid_session
       expect(assigns(:plants)).to eq(plants)
     end
   end

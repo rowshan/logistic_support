@@ -12,7 +12,7 @@ RSpec.describe ShiftsController, type: :controller do
   describe "GET index" do
    let!(:shifts) { create_list :shift, rand(2..10) }
     it "assigns all shifts as @shifts" do
-      get :index, parrams: {}, session: valid_session
+      get :index, params: {}, session: valid_session
       expect(assigns(:shifts)).to eq(shifts)
     end
   end

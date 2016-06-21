@@ -11,7 +11,7 @@ RSpec.describe TripsController, type: :controller do
   describe "GET index" do
     let!(:trips) { create_list :trip, rand(2..10) }
     it "assigns all trips as @trips" do
-      get :index, parrams: {}, session: valid_session
+      get :index, params: {}, session: valid_session
       expect(assigns(:trips)).to eq(trips)
     end
   end

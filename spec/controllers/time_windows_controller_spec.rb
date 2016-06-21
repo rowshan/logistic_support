@@ -11,7 +11,7 @@ RSpec.describe TimeWindowsController, type: :controller do
   describe "GET index" do
     let!(:time_windows) { create_list :time_window, rand(2..10)}
     it "assigns all time_windows as @time_windows" do
-      get :index, parrams: {}, session: valid_session
+      get :index, params: {}, session: valid_session
       expect(assigns(:time_windows)).to eq(time_windows)
     end
   end

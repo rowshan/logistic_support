@@ -12,7 +12,7 @@ RSpec.describe TripKindsController, type: :controller do
   describe "GET index" do
     let!(:trip_kinds) { create_list :trip_kind, rand(2..10) }
     it "assigns all trip_kinds as @trip_kinds" do
-      get :index, parrams: {}, session: valid_session
+      get :index, params: {}, session: valid_session
       expect(assigns(:trip_kinds)).to eq(trip_kinds)
     end
   end
