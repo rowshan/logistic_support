@@ -1,5 +1,4 @@
 class TimeWindow < ApplicationRecord
-  Time='UTC'
   has_many :shifts
   has_many :trips
 

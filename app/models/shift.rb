@@ -1,5 +1,4 @@
 class Shift < ApplicationRecord
- Time='UTC'
  belongs_to :time_window
  belongs_to :plant
 
