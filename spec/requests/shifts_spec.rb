@@ -27,9 +27,9 @@ RSpec.describe "Shifts", type: :request do
         get shifts_path, headers: headers, as: :json
         expect(json_api_response.size).to eq(shifts.count)
         expect(shifts.map(&:id)).to include(json_api_response.first['id'])
-        expect(json_api_response.first['attributes']).to include('name','time-window-id', 'start-time', 'end-time',
+        expect(json_api_response.first['attributes']).to include('name', 'start-time', 'end-time',
                                                                  'send-time','enabled' ,'url')
-        expect(json_api_response.first['relationships']).to include('time-window')
+        expect(json_api_response.first['relationships']).to include('time-windows')
       end
 
     end
@@ -49,7 +49,7 @@ RSpec.describe "Shifts", type: :request do
 
         it 'responds with the correct information' do
           get shift_path(shift), headers: headers, as: :json
-          expect(json_api_response['attributes']).to include('name','time-window-id', 'start-time', 'end-time',
+          expect(json_api_response['attributes']).to include('name','start-time', 'end-time',
                                                              'send-time','enabled', 'url')
         end
 
@@ -68,16 +68,14 @@ RSpec.describe "Shifts", type: :request do
     end
 
     describe 'POST /shifts' do
-      let!(:time_window) { create :time_window }
       let!(:plant) { create :plant }
       describe 'with valid params' do
 
         it 'responds with :created' do
-          _attrs = attributes_for(:shift).slice( :time_window_id, :name, :start_time, :end_time, :send_time,:enabled,
-                                                 :plant_id).update(:time_window_id=>time_window.to_param,
-                                                                   :plant_id=> plant.to_param)
-          post shifts_path, params: {:plant_id=> plant.to_param,:time_window_id=> time_window.to_param}.merge(
-              json_api_params(Shift, _attrs).update(:time_window_id=> time_window.to_param,:plant_id=> plant.to_param)
+          _attrs = attributes_for(:shift).slice( :name, :start_time, :end_time, :send_time,:enabled,
+                                                 :plant_id).update(:plant_id=> plant.to_param)
+          post shifts_path, params: {:plant_id=> plant.to_param}.merge(
+              json_api_params(Shift, _attrs).update(:plant_id=> plant.to_param)
           ), headers: headers, as: :json
           expect(response).to have_http_status(:created)
 
@@ -86,8 +84,8 @@ RSpec.describe "Shifts", type: :request do
 
       describe 'with invalid params' do
         it 'responds with :unprocessable_entity' do
-          post shifts_path, params: {:plant_id=> plant.to_param,:time_window_id=> time_window.to_param}.merge(
-              json_api_params(Shift, {time_window_id:nil,name: nil,start_time:nil, end_time:nil,
+          post shifts_path, params: {:plant_id=> plant.to_param}.merge(
+              json_api_params(Shift, {name: nil,start_time:nil, end_time:nil,
                                                             send_time:nil,enabled:nil})
           ), headers: headers, as: :json
           expect(response).to have_http_status(:unprocessable_entity)
@@ -121,7 +119,7 @@ RSpec.describe "Shifts", type: :request do
 
       describe 'with invalid params' do
         it 'it responds with :unprocessable_entity' do
-          put shift_path(shift), params: json_api_params(Shift, {time_window_id:nil,name: nil,start_time:nil,
+          put shift_path(shift), params: json_api_params(Shift, {name: nil,start_time:nil,
                                                                  end_time:nil,send_time:nil,enabled:nil}
           ), headers: headers, as: :json
           expect(response).to have_http_status(:unprocessable_entity)

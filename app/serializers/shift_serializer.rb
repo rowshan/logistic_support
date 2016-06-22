@@ -1,7 +1,8 @@
 class ShiftSerializer < ApplicationSerializer
   attributes :id, :name, :start_time, :end_time, :send_time, :enabled, :plant_id, :url
 
-  has_and_belongs_to_many :time_windows
+  has_many :time_windows
+
   belongs_to :plant
 
   def url
