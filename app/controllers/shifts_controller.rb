@@ -52,7 +52,7 @@ class ShiftsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def shift_params
-      json_api_params(Shift, [:name,:time_window_id, :start_time, :end_time, :send_time, :plant_id,:enabled]
+      json_api_params(Shift, [:name,:start_time, :end_time, :send_time, :plant_id,:enabled]
       ).fetch(:attributes, {})
     end
 end
