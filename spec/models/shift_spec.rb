@@ -18,14 +18,6 @@ RSpec.describe Shift, type: :model do
 
 
   describe "validation of" do
-
-    context 'time_window_id' do
-      subject { build(:shift, time_window_id: nil) }
-      it " fails for missing" do
-        expect(subject).not_to be_valid
-        expect(subject.errors).to include(:time_window_id)
-      end
-    end
     context 'name' do
       subject { build(:shift, name: nil) }
       it " fails for missing" do

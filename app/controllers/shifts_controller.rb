@@ -16,9 +16,9 @@ class ShiftsController < ApplicationController
   # POST /shifts
   def create
     @shift = Shift.new(shift_params)
-    if shift_params[:time_window_id]
-      @shift.time_window=TimeWindow.find(shift_params[:time_window_id])
-      end
+    # if shift_params[:time_window_id]
+    #   @shift.time_window=TimeWindow.find(shift_params[:time_window_id])
+    #   end
 
     if shift_params[:plant_id]
       @shift.plant=Plant.find(shift_params[:plant_id])
