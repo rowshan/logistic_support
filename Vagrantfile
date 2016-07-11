@@ -20,6 +20,15 @@ Vagrant.configure(2) do |config|
   # `vagrant box outdated`. This is not recommended.
   # config.vm.box_check_update = false
 
+  config.vm.hostname = 'logistic'
+  #config.vm.network :forwarded_port, guest: 80, host: 8080
+  config.vm.network :private_network, ip: "192.168.200.140"
+  #config.vm.synced_folder "www", "/var/www/jonnyfresh"
+  config.vm.provider :virtualbox do |vb|
+    vb.memory = 1024
+    vb.linked_clone = true
+  end
+
   config.vm.provision :shell, privileged: false, inline: <<-FIX_NO_TTY
     sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile
   FIX_NO_TTY
@@ -35,100 +44,40 @@ Vagrant.configure(2) do |config|
     fi
   SHELL
 
-  config.vm.define :db do |db|
-    db.vm.hostname = 'logistic-db.jonnyfresh.v2'
-    # db.vm.network :forwarded_port, guest: 5432, host: 54321
-    db.vm.network :private_network, ip: "192.168.200.140"
+  config.vm.provision :shell, name:'Ruby', inline: <<-SHELL
+  if [ ! -f ~/.provision/ruby ]; then
+      apt-add-repository -y ppa:brightbox/ruby-ng
+      apt-get update -qqy
+      apt-get install -y ruby#{_IRV} ruby#{_IRV}-dev
+      apt-get install -y libxml2 libxml2-dev libxslt1.1 libxslt1-dev libpq-dev libpq-dev libmysqlclient-dev libsqlite3-dev build-essential
+      gem install bundler
+      touch ~/.provision/ruby
+  fi
+  SHELL
 
-    db.vm.provider :virtualbox do |vb|
-        vb.memory = 1024
-        vb.linked_clone = true
-    end
+  config.vm.provision :shell, name: 'PostgreSQL', inline: <<-SHELL
+  if [ ! -f ~/.provision/postgresql ]; then
+      wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+      apt-add-repository -y "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main"
+      apt-get update -qqy
+      apt-get install -y postgresql-9.5 postgresql-client libpq-dev
+      sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
+      sed -i -e "s/#listen_addresses.*/listen_addresses = '*'/" /etc/postgresql/9.5/main/postgresql.conf
+      echo 'host  all all 192.168.200.0/24  md5' >> /etc/postgresql/9.5/main/pg_hba.conf
+      echo 'host  all all 127.0.0.0/32  md5' >> /etc/postgresql/9.5/main/pg_hba.conf
+      service postgresql restart
+      touch ~/.provision/postgresql
+  fi
+  SHELL
 
-    db.vm.provision :shell, name: 'PostgreSQL', inline: <<-SHELL
-    if [ ! -f ~/.provision/postgresql ]; then
-        wget -qO - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-        apt-add-repository -y "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main"
-        apt-get update -qqy
-        apt-get install -y postgresql-9.5 postgresql-client libpq-dev
-        sudo -u postgres psql -c "CREATE USER vagrant WITH PASSWORD 'vagrant';"
-        sudo -u postgres psql -c "ALTER USER vagrant WITH superuser;"
-        sed -i -e "s/#listen_addresses.*/listen_addresses = '*'/" /etc/postgresql/9.5/main/postgresql.conf
-        echo 'host  all all 192.168.200.0/24  md5' >> /etc/postgresql/9.5/main/pg_hba.conf
-        service postgresql restart
-        touch ~/.provision/postgresql
+  config.vm.provision :shell, name:'SSH', inline: <<-SHELL
+    if [ ! -f ~/.provision/ssh ]; then
+        cp /vagrant/.provision/developer_rsa /home/vagrant/.ssh/
+        touch /home/vagrant/.ssh/config
+        echo 'Host bitbucket.org' >> /home/vagrant/.ssh/config
+        echo '  Hostname bitbucket.org' >> /home/vagrant/.ssh/config
+        echo '  IdentityFile ~/.ssh/developer_rsa' >> /home/vagrant/.ssh/config
+        touch ~/.provision/ssh
     fi
-    SHELL
-
-    # db.vm.provision :shell, name:'Application', inline: <<-SHELL
-    # if [ ! -f ~/.provision/application ]; then
-    #     # eventually import a dump file
-    #     touch ~/.provision/application
-    # fi
-    # SHELL
-  end
-
-  config.vm.define :web, default: true do |web|
-    web.vm.hostname = 'logistic-app.jonnyfresh.v2'
-    #web.vm.network :forwarded_port, guest: 80, host: 8080
-    web.vm.network :private_network, ip: "192.168.200.40"
-
-    # web.vm.synced_folder "www", "/var/www/jonnyfresh"
-
-    web.vm.provider :virtualbox do |vb|
-        vb.memory = 1024
-        vb.linked_clone = true
-    end
-
-    web.vm.provision :shell, name:'Ruby', inline: <<-SHELL
-    if [ ! -f ~/.provision/ruby ]; then
-        apt-add-repository -y ppa:brightbox/ruby-ng
-        apt-get update -qqy
-        apt-get install -y ruby#{_IRV} ruby#{_IRV}-dev
-        apt-get install -y libxml2 libxml2-dev libxslt1.1 libxslt1-dev libpq-dev libpq-dev libmysqlclient-dev libsqlite3-dev build-essential
-        gem install bundler
-        touch ~/.provision/ruby
-    fi
-    SHELL
-
-    web.vm.provision :shell, name:'NginX', inline: <<-SHELL
-    if [ ! -f ~/.provision/nginx ]; then
-        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
-        apt-add-repository -y "deb http://nginx.org/packages/ubuntu/ $(lsb_release -cs) nginx"
-        apt-get purge nginx*
-        apt-get update
-        apt-get install -y nginx
-        usermod -a -G www-data vagrant
-        touch ~/.provision/nginx
-    fi
-    SHELL
-
-    # cd /vagrant && bundle exec puma -e vagrant -d -b unix:///var/run/logistic.sock --pidfile /var/run/logistic.pid
-    web.vm.provision :shell, name:'Application', inline: <<-SHELL
-    if [ ! -f ~/.provision/application ]; then
-        if [ -f /etc/nginx/conf.d/sites-enabled/default ]; then
-          rm /etc/nginx/conf.d/sites-enabled/default
-        fi
-        if [ -f /etc/nginx/conf.d/default.conf ]; then
-          mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.disabled
-        fi
-        cp -f /vagrant/.provision/site.conf /etc/nginx/conf.d/logistic.conf
-        cp -f /vagrant/.provision/puma*.conf /etc/init/
-        chmod -x /etc/init/puma*.conf
-        touch /etc/puma.conf && echo '/vagrant' >> /etc/puma.conf
-        if [ ! -d /var/log/puma ]; then
-          mkdir -p /var/log/puma
-        fi
-        touch /etc/environment && echo 'RAILS_ENV=vagrant' >> /etc/environment
-        # su -c "cd /vagrant && bundle install" -l vagrant
-        cd /vagrant && bundle install
-        start puma-manager
-        service nginx restart
-        echo '192.168.200.140  db' >> /etc/hosts
-        echo '127.0.0.1     logistic.jonnyfresh.dev' >> /etc/hosts
-        touch ~/.provision/application
-    fi
-    SHELL
-  end
-
+  SHELL
 end
