@@ -32,10 +32,10 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'active_model_serializers', github: 'rails-api/active_model_serializers'
-gem 'dotenv-rails', groups: [:development, :test, :vagrant]
+gem 'dotenv-rails', groups: [:development, :test]
 
 group :development, :test do
-  gem 'rspec-rails', '~>3.5.0.beta'
+  gem 'rspec-rails', '~>3.5'
   gem 'rails-controller-testing'
   gem 'factory_girl_rails'
 
