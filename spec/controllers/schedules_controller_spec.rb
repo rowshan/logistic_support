@@ -71,9 +71,7 @@ RSpec.describe SchedulesController, type: :controller do
         new_attributes.slice(:date, :driver_id,:shift_id).each do |attr, val|
           expect(schedule.send(attr)).to eq(val)
         end
-        # new_attributes.slice(:date).each do |attr, val|
-        #   expect(schedule.send(attr).strftime("%H:%M")).to eq(val)
-        # end
+
       end
 
       it "assigns the requested schedule as @schedule" do
@@ -86,9 +84,7 @@ RSpec.describe SchedulesController, type: :controller do
     describe "with invalid params" do
       it "assigns the schedule as @schedule" do
         put :update, params: {:id => schedule.to_param}.update(
-            json_api_params(Schedule, new_attributes.update(
-                name:nil,start_time:nil, end_time:nil))
-        ), session: valid_session
+            json_api_params(Schedule, new_attributes.update(date:nil))), session: valid_session
         expect(assigns(:schedule)).to eq(schedule)
       end
 
