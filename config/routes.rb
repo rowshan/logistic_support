@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     resources :time_windows, only:[:create, :update, :destroy, :index, :show ]
     resources :plants, only:[:create, :update, :destroy, :index, :show ]
     resources :drivers, only:[:create, :update, :destroy, :index, :show ]
+    resources :schedules, only:[:create, :update, :destroy, :index, :show ]
 
   end
 end
