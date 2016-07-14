@@ -46,6 +46,6 @@ class SchedulesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def schedule_params
-      json_api_params(Schedule, [:date,:start_time, :end_time, :driver_id, :shift_id]).fetch(:attributes, {})
+      json_api_params(Schedule, [:date,:driver_id, :shift_id]).fetch(:attributes, {})
     end
 end
