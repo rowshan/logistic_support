@@ -26,6 +26,23 @@ RSpec.describe TimeWindow, type: :model do
         expect(subject.errors).to include(:tenant_id)
       end
     end
+
+    context 'start_time' do
+      subject { build(:time_window, start_time: nil) }
+      it " fails for missing" do
+        expect(subject).not_to be_valid
+        expect(subject.errors).to include(:start_time)
+      end
+    end
+
+    context 'end_time' do
+      subject { build(:time_window, end_time: nil) }
+      it " fails for missing" do
+        expect(subject).not_to be_valid
+        expect(subject.errors).to include(:end_time)
+      end
+    end
+
   end
 
 end

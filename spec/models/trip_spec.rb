@@ -28,12 +28,36 @@ RSpec.describe Trip, type: :model do
       end
     end
 
-
-    context 'time_window_id' do
-      subject { build(:trip, time_window_id: nil) }
+    context 'order_id' do
+      subject { build(:trip, order_id: nil) }
       it " fails for missing" do
         expect(subject).not_to be_valid
-        expect(subject.errors).to include(:time_window_id)
+        expect(subject.errors).to include(:order_id)
+      end
+    end
+
+    context 'date' do
+      subject { build(:trip, date: nil) }
+      it " fails for missing" do
+        expect(subject).not_to be_valid
+        expect(subject.errors).to include(:date)
+      end
+    end
+
+
+    context 'start_time' do
+      subject { build(:trip, start_time: nil) }
+      it " fails for missing" do
+        expect(subject).not_to be_valid
+        expect(subject.errors).to include(:start_time)
+      end
+    end
+
+    context 'end_time' do
+      subject { build(:trip, end_time: nil) }
+      it " fails for missing" do
+        expect(subject).not_to be_valid
+        expect(subject.errors).to include(:end_time)
       end
     end
 

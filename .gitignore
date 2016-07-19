@@ -17,6 +17,7 @@
 .byebug_history
 
 .vagrant/
+.idea/
 
 coverage/
 # config/*.yml

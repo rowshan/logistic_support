@@ -20,9 +20,6 @@ class TripsController < ApplicationController
     if trip_params[:trip_kind_id]
       @trip.trip_kind = TripKind.find(trip_params[:trip_kind_id])
     end
-    if trip_params[:time_window_id]
-      @trip.time_window = TimeWindow.find(trip_params[:time_window_id])
-    end
 
     if @trip.save
       render json: @trip, status: :created
@@ -38,10 +35,6 @@ class TripsController < ApplicationController
 
      if trip_params[:trip_kind_id]
        @trip.trip_kind=TripKind.find(trip_params[:trip_kind_id])
-     end
-
-     if trip_params[:time_window_id]
-       @trip.time_window = TimeWindow.find(trip_params[:time_window_id])
      end
 
      if @trip.update(trip_params)
@@ -64,7 +57,7 @@ class TripsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def trip_params
-      json_api_params(Trip,[:trip_kind_id, :order_id, :date, :time_window_id, :address_id]).fetch(:attributes, {})
+      json_api_params(Trip,[:trip_kind_id, :order_id, :date, :start_time, :end_time, :address_id]).fetch(:attributes, {})
 
     end
 end

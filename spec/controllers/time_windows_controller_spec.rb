@@ -55,8 +55,11 @@ RSpec.describe TimeWindowsController, type: :controller do
       it "updates the requested TimeWindow" do
         put :update, params: {:id => time_window.to_param}.update(json_api_params(TimeWindow, new_attributes)), session: valid_session
         time_window.reload
-        new_attributes.each do |attr, val|
+        new_attributes.except(:start_time,:end_time).each do |attr, val|
           expect(time_window.send(attr)).to eq(val)
+        end
+        new_attributes.slice(:start_time,:end_time).each do |attr, val|
+          expect(time_window.send(attr).strftime('%H:%M')).to eq(val.strftime('%H:%M'))
         end
       end
 

@@ -72,8 +72,11 @@ RSpec.describe TripsController, type: :controller do
                                                                                :time_window_id => time_window.to_param)
         ), session: valid_session
         trip.reload
-        new_attributes.each do |attr, val|
-           expect(trip.send(attr)).to eq(val)
+        new_attributes.except(:start_time,:end_time).each do |attr, val|
+          expect(trip.send(attr)).to eq(val)
+        end
+        new_attributes.slice(:start_time,:end_time).each do |attr, val|
+          expect(trip.send(attr).strftime('%H:%M')).to eq(val.strftime('%H:%M'))
         end
       end
     end

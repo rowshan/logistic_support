@@ -91,7 +91,7 @@ RSpec.describe "TimeWindows", type: :request do
       it 'updates the requested time_window' do
         put time_window_path(time_window), params: json_api_params(TimeWindow, new_attributes), headers: headers, as: :json
         time_window.reload
-        expect(time_window.attributes.with_indifferent_access).to include(new_attributes)
+        expect(time_window.attributes.except(:start_time,:end_time).with_indifferent_access).to include(new_attributes.except(:start_time,:end_time))
       end
 
       it 'responds with :ok' do
