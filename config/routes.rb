@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     resources :trip_kinds, only:[:create, :update, :destroy, :index, :show ]
 
     resources :trips, only:[:create, :update, :destroy, :index, :show ] do
-      resources :addresses, only:[:create, :update, :destroy, :index, :show ]
+      resource :address , only:[:create, :update, :destroy, :show ]
     end
 
     resources :shifts, only:[:create, :update, :destroy, :index, :show ]

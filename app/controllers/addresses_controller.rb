@@ -1,9 +1,10 @@
 class AddressesController < ApplicationController
+  before_action :set_trip
   before_action :set_address, only: [:show, :update, :destroy]
 
   # GET /addresses
   def index
-    @addresses = Address.all
+    @addresses = Address.where(trip: @trip).all
 
     render json: @addresses
   end
@@ -16,7 +17,7 @@ class AddressesController < ApplicationController
   # POST /addresses
   def create
     @address = Address.new(address_params)
-    @address.trip = Trip.find(params[:trip_id])
+    @address.trip = @trip
 
 
     if @address.save
@@ -43,7 +44,11 @@ class AddressesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_address
-      @address = Address.find(params[:id])
+      @address = @trip.address
+    end
+
+    def set_trip
+      @trip = Trip.find(params[:trip_id])
     end
 
     # Only allow a trusted parameter "white list" through.
