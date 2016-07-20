@@ -39,7 +39,7 @@ Vagrant.configure(2) do |config|
         apt-get update -qqy
         apt-get install -qqy curl wget git git-core \
         python-software-properties apt-transport-https ca-certificates \
-        htop lynx mc
+        htop lynx mc httpie
         touch ~/.provision/toolchain
     fi
   SHELL
@@ -64,10 +64,22 @@ Vagrant.configure(2) do |config|
       sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
       sed -i -e "s/#listen_addresses.*/listen_addresses = '*'/" /etc/postgresql/9.5/main/postgresql.conf
       echo 'host  all all 192.168.200.0/24  md5' >> /etc/postgresql/9.5/main/pg_hba.conf
-      echo 'host  all all 127.0.0.0/32  md5' >> /etc/postgresql/9.5/main/pg_hba.conf
       service postgresql restart
       touch ~/.provision/postgresql
   fi
+  SHELL
+
+  config.vm.provision :shell, name:'Hosts', inline: <<-SHELL
+    if [ ! -f ~/.provision/application ]; then
+        echo '192.168.200.100  context' >> /etc/hosts
+        echo '192.168.200.110  account' >> /etc/hosts
+        echo '192.168.200.120  shop' >> /etc/hosts
+        echo '192.168.200.130  books' >> /etc/hosts
+        echo '127.0.0.1  logistic' >> /etc/hosts
+        echo '192.168.200.200  api.jonnyfresh.dev  api.jf.dev' >> /etc/hosts
+
+        touch ~/.provision/application
+    fi
   SHELL
 
   config.vm.provision :shell, name:'SSH', inline: <<-SHELL
