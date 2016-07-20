@@ -49,3 +49,5 @@ gem 'simplecov', require: false, group: :test
 # It is required by ApiM8
 gem 'rest-client', github: 'rest-client/rest-client', branch: :master
 gem 'api_m8', git: 'git@bitbucket.org:jonnyfresh/api_m8.git', branch: :master
+
+gem 'table_print'
