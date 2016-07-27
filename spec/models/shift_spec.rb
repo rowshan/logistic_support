@@ -47,4 +47,17 @@ RSpec.describe Shift, type: :model do
       end
     end
   end
+
+  describe 'available?' do
+    subject { create(:shift, availability: sprintf('%08b',0b01010101))}
+    it 'corresponds with week days' do
+      (0..6).each do |wday|
+        if wday % 2 == 0
+          expect(subject.available? wday).to be_truthy
+        else
+          expect(subject.available? wday).to be_falsey
+        end
+      end
+    end
+  end
 end
