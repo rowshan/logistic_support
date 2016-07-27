@@ -45,7 +45,15 @@ namespace :time_window do
     logger = Logger.new('logistic')
     data.each_with_index do |attrs, index|
       begin
-        TimeWindow.create!(attrs.except(:id))
+        tw = nil
+        if attrs.has_key? :id && !attrs[:id].empty?
+          tw = TimeWindow.where(id: attr[:id]).first
+        end
+        if tw
+          tw.update!(attrs.except(:id))
+        else
+          TimeWindow.create!(attrs.except(:id))
+        end
       rescue => e
         logger.info "While processing #{index}, #{attrs.inspect}:"
         logger.error e
