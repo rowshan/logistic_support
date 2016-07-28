@@ -1,9 +1,11 @@
 class TimeWindowsController < ApplicationController
   before_action :set_time_window, only: [:show, :update, :destroy]
+  before_action :validate_tenant, only: [:show, :update, :destroy]
+
 
   # GET /time_windows
   def index
-    @time_windows = TimeWindow.all
+    @time_windows = TimeWindow.where(tenant_id: current_context.tenant_id).all
 
     render json: @time_windows
   end
@@ -22,7 +24,7 @@ class TimeWindowsController < ApplicationController
     else
       render json: @time_window.errors, status: :unprocessable_entity
     end
-  #  p time_window_params
+    #  p time_window_params
   end
 
   # PATCH/PUT /time_windows/1
@@ -45,6 +47,16 @@ class TimeWindowsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_time_window
     @time_window = TimeWindow.find(params[:id])
+  end
+
+  def validate_tenant
+    if @time_window and !@time_window.tenant_id.eql?(current_context.tenant_id)
+      raise ApiM8::Exceptions::TenantMismatch.new
+    end
+
+    if @time_window and time_window_params.include?(:tenant_id) and !@time_window.tenant_id.eql?(time_window_params[:tenant_id])
+      raise ApiM8::Exceptions::TenantMismatch.new
+    end
   end
 
   # Only allow a trusted parameter "white list" through.
