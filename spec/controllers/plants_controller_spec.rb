@@ -1,17 +1,23 @@
 require 'rails_helper'
 
-
-
 RSpec.describe PlantsController, type: :controller do
   before {
     controller_stub_token_authentication
   }
 
   let(:valid_session) { {} }
+  let(:context) {
+    OpenStruct.new(
+        tenant_id: SecureRandom.uuid
+    )
+  }
 
+  before {
+    allow(controller).to receive(:current_context).and_return(context)
+  }
 
   describe "GET index" do
-    let!(:plants) { create_list :plant, rand(2..10) }
+    let!(:plants) { create_list :plant, rand(2..10), tenant_id: context.tenant_id }
     it "assigns all plants as @plants" do
       get :index, params: {}, session: valid_session
       expect(assigns(:plants)).to eq(plants)
@@ -19,7 +25,7 @@ RSpec.describe PlantsController, type: :controller do
   end
 
   describe "GET show" do
-    let!(:plant) { create :plant }
+    let!(:plant) { create :plant, tenant_id: context.tenant_id }
     it "assigns the requested plant as @plant" do
       get :show, params: {:id => plant.to_param}, session: valid_session
       expect(assigns(:plant)).to eq(plant)
@@ -56,8 +62,8 @@ RSpec.describe PlantsController, type: :controller do
 
 
   describe "PUT update" do
-    let!(:plant) { create :plant  }
-    let(:new_attributes) { attributes_for(:plant)}
+    let!(:plant) { create :plant, tenant_id: context.tenant_id  }
+    let(:new_attributes) { attributes_for(:plant).update(tenant_id: context.tenant_id)}
 
     describe "with valid params" do
       it "updates the requested Plant" do
@@ -88,7 +94,7 @@ RSpec.describe PlantsController, type: :controller do
   end
 
   describe "DELETE destroy" do
-    let!(:plant) { create :plant }
+    let!(:plant) { create :plant, tenant_id: context.tenant_id }
     it "destroys the requested plant" do
       expect {
         delete :destroy, params: {:id => plant.to_param}, session: valid_session

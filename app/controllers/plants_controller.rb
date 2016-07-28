@@ -4,7 +4,7 @@ class PlantsController < ApplicationController
 
   # GET /plants
   def index
-    @plants = Plant.where(tenant: current_context.tenant_id).all
+    @plants = Plant.where(tenant_id: current_context.tenant_id).all
 
     render json: @plants
   end

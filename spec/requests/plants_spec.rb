@@ -8,11 +8,18 @@ RSpec.describe "Plants", type: :request do
   let(:headers) {
     {}.merge(token_authentication).merge(json_api_headers)
   }
+  let(:context) {
+    OpenStruct.new(
+        tenant_id: SecureRandom.uuid
+    )
+  }
 
-
+  before {
+    allow_any_instance_of(PlantsController).to receive(:current_context).and_return(context)
+  }
 
   describe "GET /plants" do
-    let!(:plants) { create_list :plant, rand(5..10) }
+    let!(:plants) { create_list :plant, rand(5..10), tenant_id: context.tenant_id }
 
     it 'responds with :ok' do
       get plants_path, headers: headers, as: :json
@@ -28,14 +35,14 @@ RSpec.describe "Plants", type: :request do
       get plants_path, headers: headers, as: :json
       expect(json_api_response.size).to eq(plants.count)
       expect(plants.map(&:id)).to include(json_api_response.first['id'])
-      expect(json_api_response.first['attributes']).to include('company','email','phone-no','address','tenant-id','url')
-      expect(json_api_response.first['relationships']).to include('shifts','drivers')
+      expect(json_api_response.first['attributes']).to include('company', 'email', 'phone-no', 'address', 'tenant-id', 'url')
+      expect(json_api_response.first['relationships']).to include('shifts', 'drivers')
 
     end
   end
 
   describe 'GET /plants/:id' do
-    let!(:plant) { create :plant }
+    let!(:plant) { create :plant, tenant_id: context.tenant_id }
 
     describe 'for existing item' do
       it 'is a valid JSON API response' do
@@ -49,7 +56,7 @@ RSpec.describe "Plants", type: :request do
 
       it 'responds with the correct information' do
         get plant_path(plant), headers: headers, as: :json
-        expect(json_api_response['attributes']).to include('company','email','phone-no','address','tenant-id', 'url')
+        expect(json_api_response['attributes']).to include('company', 'email', 'phone-no', 'address', 'tenant-id', 'url')
       end
 
       it 'responds with :ok' do
@@ -70,7 +77,7 @@ RSpec.describe "Plants", type: :request do
     let!(:plant) { create :plant }
     describe 'with valid params' do
       it 'responds with :created' do
-        _attrs = attributes_for(:plant).slice(:company,:email,:phone_no,:address,:tenant_id)
+        _attrs = attributes_for(:plant).slice(:company, :email, :phone_no, :address, :tenant_id)
         post plants_path, params: json_api_params(Plant, _attrs), headers: headers, as: :json
         expect(response).to have_http_status(:created)
       end
@@ -78,7 +85,7 @@ RSpec.describe "Plants", type: :request do
 
     describe 'with invalid params' do
       it 'responds with :unprocessable_entity' do
-        post plants_path, params: json_api_params(Plant, { company:nil,email:nil,phone_no:nil,address:nil,tenant_id:nil}
+        post plants_path, params: json_api_params(Plant, {company: nil, email: nil, phone_no: nil, address: nil, tenant_id: nil}
         ), headers: headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
       end
@@ -86,8 +93,8 @@ RSpec.describe "Plants", type: :request do
   end
 
   describe 'PUT /plants/:id' do
-    let!(:plant) { create :plant }
-    let(:new_attributes) { attributes_for(:plant) }
+    let!(:plant) { create :plant, tenant_id: context.tenant_id }
+    let(:new_attributes) { attributes_for(:plant).slice(:tenant_id).update(tenant_id: context.tenant_id) }
 
     describe 'with valid params' do
 
@@ -105,9 +112,15 @@ RSpec.describe "Plants", type: :request do
 
     describe 'with invalid params' do
       it 'it responds with :unprocessable_entity' do
-        put plant_path(plant), params: json_api_params(Plant, {company:nil,email:nil,phone_no:nil,
-                                                               address:nil,tenant_id:nil}), headers: headers, as: :json
+        #skip('no fields to check this spec, :tenant are validated before AR::update')
+        put plant_path(plant), params: json_api_params(Plant, {company: nil, email: nil, phone_no: nil,
+                                                               address: nil}), headers: headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'responds with :forbidden for different :tenant' do
+        put plant_path(plant), params: json_api_params(Plant, {tenant_id: SecureRandom.uuid}), headers: headers, as: :json
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -120,7 +133,7 @@ RSpec.describe "Plants", type: :request do
   end
 
   describe 'DELETE /plants/:id' do
-    let!(:plant) { create :plant }
+    let!(:plant) { create :plant, tenant_id: context.tenant_id }
 
     it 'for existing item, responds with :no_content' do
       delete plant_path(plant), headers: headers, as: :json
@@ -129,6 +142,14 @@ RSpec.describe "Plants", type: :request do
     it 'for missing item, responds with :not_found' do
       delete plant_path(-1000), headers: headers, as: :json
       expect(response).to have_http_status(:not_found)
+    end
+
+    context 'responds with :forbidden' do
+      it 'for different :tenant' do
+        plant.update(tenant_id: SecureRandom.uuid)
+        delete plant_path(plant), headers: headers, as: :json
+        expect(response).to have_http_status(:forbidden)
+      end
     end
   end
 end
