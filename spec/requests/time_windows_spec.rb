@@ -9,8 +9,18 @@ RSpec.describe "TimeWindows", type: :request do
     {}.merge(token_authentication).merge(json_api_headers)
   }
 
+  let(:context) {
+    OpenStruct.new(
+        tenant_id: SecureRandom.uuid
+    )
+  }
+
+  before {
+    allow_any_instance_of(TimeWindowsController).to receive(:current_context).and_return(context)
+  }
+
   describe "GET /time_windows" do
-    let!(:time_windows) { create_list :time_window, rand(5..10) }
+    let!(:time_windows) { create_list :time_window, rand(5..10), tenant_id: context.tenant_id }
 
     it 'responds with :ok' do
       get time_windows_path, headers: headers, as: :json
@@ -34,7 +44,7 @@ RSpec.describe "TimeWindows", type: :request do
   end
 
   describe 'GET /time_windows/:id' do
-    let!(:time_window) { create :time_window }
+    let!(:time_window) { create :time_window, tenant_id: context.tenant_id }
 
     describe 'for existing item' do
       it 'is a valid JSON API response' do
@@ -83,8 +93,8 @@ RSpec.describe "TimeWindows", type: :request do
   end
 
   describe 'PUT /time_windows/:id' do
-    let!(:time_window) { create :time_window }
-    let(:new_attributes) { attributes_for(:time_window).slice(:tenant_id, :start_time, :end_time) }
+    let!(:time_window) { create :time_window, tenant_id: context.tenant_id }
+    let(:new_attributes) { attributes_for(:time_window).slice(:tenant_id, :start_time, :end_time).update(tenant_id: context.tenant_id) }
 
     describe 'with valid params' do
 
@@ -102,8 +112,13 @@ RSpec.describe "TimeWindows", type: :request do
 
     describe 'with invalid params' do
       it 'it responds with :unprocessable_entity' do
-        put time_window_path(time_window), params: json_api_params(TimeWindow, {tenant_id: nil,start_time:nil, end_time:nil}), headers: headers, as: :json
+        put time_window_path(time_window), params: json_api_params(TimeWindow, {start_time:nil, end_time:nil}), headers: headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'responds with :forbidden for different :tenant' do
+        put time_window_path(time_window), params: json_api_params(TimeWindow, {tenant_id: SecureRandom.uuid}), headers: headers, as: :json
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -116,7 +131,7 @@ RSpec.describe "TimeWindows", type: :request do
   end
 
   describe 'DELETE /time_windows/:id' do
-    let!(:time_window) { create :time_window }
+    let!(:time_window) { create :time_window, tenant_id: context.tenant_id }
 
     it 'for existing item, responds with :no_content' do
       delete time_window_path(time_window), headers: headers, as: :json
@@ -125,6 +140,14 @@ RSpec.describe "TimeWindows", type: :request do
     it 'for missing item, responds with :not_found' do
       delete time_window_path(-1000), headers: headers, as: :json
       expect(response).to have_http_status(:not_found)
+    end
+
+    context 'responds with :forbidden' do
+      it 'for different :tenant' do
+        time_window.update(tenant_id: SecureRandom.uuid)
+        delete time_window_path(time_window), headers: headers, as: :json
+        expect(response).to have_http_status(:forbidden)
+      end
     end
   end
 end

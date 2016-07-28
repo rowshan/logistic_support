@@ -8,8 +8,19 @@ RSpec.describe TimeWindowsController, type: :controller do
 
   let(:valid_session) { {} }
 
+  let(:context) {
+    OpenStruct.new(
+        tenant_id: SecureRandom.uuid
+    )
+  }
+
+  before {
+    allow(controller).to receive(:current_context).and_return(context)
+  }
+
+
   describe "GET index" do
-    let!(:time_windows) { create_list :time_window, rand(2..10)}
+    let!(:time_windows) { create_list :time_window, rand(2..10), tenant_id: context.tenant_id}
     it "assigns all time_windows as @time_windows" do
       get :index, params: {}, session: valid_session
       expect(assigns(:time_windows)).to eq(time_windows)
@@ -17,7 +28,7 @@ RSpec.describe TimeWindowsController, type: :controller do
   end
 
   describe "GET show" do
-    let!(:time_window) { create :time_window }
+    let!(:time_window) { create :time_window, tenant_id: context.tenant_id }
     it "assigns the requested time_window as @time_window" do
       get :show, params: {:id => time_window.to_param}, session: valid_session
       expect(assigns(:time_window)).to eq(time_window)
@@ -49,8 +60,8 @@ RSpec.describe TimeWindowsController, type: :controller do
 
 
   describe "PUT update" do
-    let!(:time_window) { create :time_window }
-    let(:new_attributes) { attributes_for :time_window }
+    let!(:time_window) { create :time_window, tenant_id: context.tenant_id }
+    let(:new_attributes) { attributes_for(:time_window).update(tenant_id: context.tenant_id ) }
     describe "with valid params" do
       it "updates the requested TimeWindow" do
         put :update, params: {:id => time_window.to_param}.update(json_api_params(TimeWindow, new_attributes)), session: valid_session
@@ -80,7 +91,7 @@ RSpec.describe TimeWindowsController, type: :controller do
   end
 
   describe "DELETE destroy" do
-    let!(:time_window) { create :time_window }
+    let!(:time_window) { create :time_window, tenant_id: context.tenant_id  }
     it "destroys the requested time_window" do
       expect {
         delete :destroy, params: {:id => time_window.to_param}, session: valid_session
