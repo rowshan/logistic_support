@@ -2,7 +2,6 @@ class ShiftSerializer < ApplicationSerializer
   attributes :id, :name, :start_time, :end_time, :send_time, :enabled, :plant_id, :url
 
   has_many :time_windows
-
   belongs_to :plant
 
   def url
@@ -16,7 +15,7 @@ class ShiftSerializer < ApplicationSerializer
 
   def end_time
     object.end_time.strftime("%H:%M")
-    end
+  end
 
   def send_time
     object.send_time.strftime("%H:%M")
