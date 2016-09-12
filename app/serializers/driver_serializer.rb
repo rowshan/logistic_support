@@ -1,5 +1,5 @@
 class DriverSerializer < ApplicationSerializer
-  attributes :id, :first_name,:last_name,:phone_no,:plant_id,:enabled, :url
+  attributes :id, :first_name,:last_name,:phone_no,:plant_id,:user_id,:enabled, :url
 
   belongs_to :plant
 

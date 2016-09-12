@@ -72,7 +72,7 @@ RSpec.describe "Drivers", type: :request do
 
     describe 'with valid params' do
       it 'responds with :created' do
-        _attrs = attributes_for(:driver).slice(:first_name,:last_name,:plant_id,:enabled).update(
+        _attrs = attributes_for(:driver).slice(:first_name,:last_name,:plant_id,:user_id,:enabled).update(
             :plant_id=> plant.to_param)
         post drivers_path, params: json_api_params(Driver, _attrs), headers: headers, as: :json
         expect(response).to have_http_status(:created)
