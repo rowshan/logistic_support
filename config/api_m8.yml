@@ -2,7 +2,13 @@
 default: &default
   client_key: <%= ENV["LOGISTIC_SERVICE_APIM8_CLIENT_KEY"] %>
   client_secret: <%= ENV["LOGISTIC_SERVICE_APIM8_CLIENT_SECRET"] %>
-  endpoint: <%= ENV["LOGISTIC_SERVICE_APIM8_ENDPOINT"] %>
+  endpoint:
+    :default: <%= ENV["APIM8_ENDPOINT_DEFAULT"] %>
+    :context: <%= ENV["APIM8_ENDPOINT_CONTEXT_SERVICE"] %>
+    :account: <%= ENV["APIM8_ENDPOINT_ACCOUNT_SERVICE"] %>
+    :shop: <%= ENV["APIM8_ENDPOINT_SHOP_SERVICE"] %>
+    :books: <%= ENV["APIM8_ENDPOINT_BOOKS_SERVICE"] %>
+    :logistic: <%= ENV["APIM8_ENDPOINT_LOGISTIC_SERVICE"] %>
 
 development:
   <<: *default
