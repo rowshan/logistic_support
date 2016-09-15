@@ -20,7 +20,7 @@ RSpec.describe PlantsController, type: :controller do
     let!(:plants) { create_list :plant, rand(2..10), tenant_id: context.tenant_id }
     it "assigns all plants as @plants" do
       get :index, params: {}, session: valid_session
-      expect(assigns(:plants)).to eq(plants)
+      expect(assigns(:plants).map(&:id)).to eq(plants.sort_by(&:id).map(&:id))
     end
   end
 

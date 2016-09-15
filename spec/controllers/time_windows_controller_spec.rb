@@ -23,7 +23,7 @@ RSpec.describe TimeWindowsController, type: :controller do
     let!(:time_windows) { create_list :time_window, rand(2..10), tenant_id: context.tenant_id}
     it "assigns all time_windows as @time_windows" do
       get :index, params: {}, session: valid_session
-      expect(assigns(:time_windows)).to eq(time_windows)
+      expect(assigns(:time_windows).map(&:id)).to eq(time_windows.sort_by(&:id).map(&:id))
     end
   end
 

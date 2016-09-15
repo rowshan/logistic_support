@@ -1,9 +1,13 @@
 class ShiftsController < ApplicationController
   before_action :set_shift, only: [:show, :update, :destroy]
 
+  def sorting_fields
+    super + [ :created_at ]
+  end
+
   # GET /shifts
   def index
-    @shifts = Shift.all
+    @shifts = Shift.list(sorting_params, pagination_params)
 
     render json: @shifts
   end

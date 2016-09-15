@@ -13,7 +13,7 @@ RSpec.describe DriversController, type: :controller do
     let!(:drivers) { create_list :driver, rand(2..10) }
     it "assigns all drivers as @drivers" do
       get :index, params: {}, session: valid_session
-      expect(assigns(:drivers)).to eq(drivers)
+      expect(assigns(:drivers).map(&:id)).to eq(drivers.sort_by(&:id).map(&:id))
     end
   end
 

@@ -1,9 +1,13 @@
 class DriversController < ApplicationController
   before_action :set_driver, only: [:show, :update, :destroy]
 
+  def sorting_fields
+    super + [ :created_at ]
+  end
+
   # GET /drivers
   def index
-    @drivers = Driver.all
+    @drivers = Driver.list(sorting_params, pagination_params)
 
     render json: @drivers
   end

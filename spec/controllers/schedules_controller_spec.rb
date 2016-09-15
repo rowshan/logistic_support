@@ -13,7 +13,7 @@ RSpec.describe SchedulesController, type: :controller do
     let!(:schedules) { create_list :schedule, rand(2..10) }
     it "assigns all schedules as @schedules" do
       get :index, params: {}, session: valid_session
-      expect(assigns(:schedules)).to eq(schedules)
+      expect(assigns(:schedules).map(&:id)).to eq(schedules.sort_by(&:id).map(&:id))
     end
   end
 

@@ -1,9 +1,13 @@
 class TripsController < ApplicationController
   before_action :set_trip, only: [:show, :update, :destroy]
 
+  def sorting_fields
+    super + [ :created_at ]
+  end
+
   # GET /trips
   def index
-    @trips = Trip.all
+    @trips = Trip.list(sorting_params, pagination_params)
 
     render json: @trips
   end

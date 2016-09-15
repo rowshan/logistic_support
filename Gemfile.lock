@@ -20,7 +20,7 @@ GIT
 
 GIT
   remote: git@bitbucket.org:jonnyfresh/api_m8.git
-  revision: d587ed07d1186ca995d78032ec974866053b7363
+  revision: beeca1f7619f566ade3226e1b29606b4fa4b0973
   branch: master
   specs:
     api_m8 (1.0.0)

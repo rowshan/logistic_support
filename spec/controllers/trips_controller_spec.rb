@@ -12,7 +12,7 @@ RSpec.describe TripsController, type: :controller do
     let!(:trips) { create_list :trip, rand(2..10) }
     it "assigns all trips as @trips" do
       get :index, params: {}, session: valid_session
-      expect(assigns(:trips)).to eq(trips)
+      expect(assigns(:trips).map(&:id)).to eq(trips.sort_by(&:id).map(&:id))
     end
   end
 

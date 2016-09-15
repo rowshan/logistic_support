@@ -1,9 +1,13 @@
 class SchedulesController < ApplicationController
   before_action :set_schedule, only: [:show, :update, :destroy]
 
+  def sorting_fields
+    super + [ :created_at ]
+  end
+
   # GET /schedules
   def index
-    @schedules = Schedule.all
+    @schedules = Schedule.list(sorting_params, pagination_params)
 
     render json: @schedules
   end

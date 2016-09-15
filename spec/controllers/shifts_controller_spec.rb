@@ -13,7 +13,7 @@ RSpec.describe ShiftsController, type: :controller do
    let!(:shifts) { create_list :shift, rand(2..10) }
     it "assigns all shifts as @shifts" do
       get :index, params: {}, session: valid_session
-      expect(assigns(:shifts)).to eq(shifts)
+      expect(assigns(:shifts).map(&:id)).to eq(shifts.sort_by(&:id).map(&:id))
     end
   end
 

@@ -2,10 +2,14 @@ class TimeWindowsController < ApplicationController
   before_action :set_time_window, only: [:show, :update, :destroy]
   before_action :validate_tenant, only: [:show, :update, :destroy]
 
+  def sorting_fields
+    super + [ :created_at ]
+  end
 
   # GET /time_windows
   def index
-    @time_windows = TimeWindow.where(tenant_id: current_context.tenant_id).all
+    @time_windows = TimeWindow.where(tenant_id: current_context.tenant_id)
+                        .list(sorting_params, pagination_params)
 
     render json: @time_windows
   end

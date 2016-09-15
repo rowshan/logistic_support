@@ -2,9 +2,14 @@ class PlantsController < ApplicationController
   before_action :set_plant, only: [:show, :update, :destroy]
   before_action :validate_tenant, only: [:show, :update, :destroy]
 
+  def sorting_fields
+    super + [ :created_at ]
+  end
+
   # GET /plants
   def index
-    @plants = Plant.where(tenant_id: current_context.tenant_id).all
+    @plants = Plant.where(tenant_id: current_context.tenant_id)
+                  .list(sorting_params, pagination_params)
 
     render json: @plants
   end
